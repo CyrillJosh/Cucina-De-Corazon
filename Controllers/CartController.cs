@@ -34,7 +34,7 @@ namespace Cucina_De_Corazon.Controllers
         public IActionResult ConfirmOrder(DateTime? reservedDate, string instructions = "")
         {
             int? sessionid = HttpContext.Session.GetInt32("User");
-            if (sessionid <= 0)
+            if (sessionid == null || sessionid <= 0)
                 return Json(new { location = "/User/Login" });
 
             if (!reservedDate.HasValue)
@@ -128,6 +128,45 @@ namespace Cucina_De_Corazon.Controllers
 
             return Json(new { success = true, message = "Added to cart successfully!" });
         }
+        [HttpPost]
+        public IActionResult UpdateQuantity([FromBody] UpdateQuantityRequest request)
+        {
+            var cartJson = HttpContext.Session.GetString("Cart");
+            if (string.IsNullOrEmpty(cartJson))
+                return Json(new { success = false, message = "Your cart is empty." });
+
+            var cart = JsonConvert.DeserializeObject<List<CartItem>>(cartJson);
+            var item = cart.FirstOrDefault(x => x.ProductId == request.ProductId);
+
+            if (item == null)
+                return Json(new { success = false, message = "Item not found in cart." });
+
+            if (request.Quantity <= 0)
+                return Json(new { success = false, message = "Quantity must be at least 1." });
+
+            // ✅ Update quantity and total
+            item.Qty = request.Quantity;
+            item.Total = item.Price * item.Qty;
+
+            // ✅ Save back to session
+            HttpContext.Session.SetString("Cart", JsonConvert.SerializeObject(cart));
+
+            var cartTotal = cart.Sum(x => x.Total);
+
+            return Json(new
+            {
+                success = true,
+                itemTotal = item.Total,
+                cartTotal = cartTotal
+            });
+        }
+
+        public class UpdateQuantityRequest
+        {
+            public int ProductId { get; set; }
+            public int Quantity { get; set; }
+        }
+
 
         public IActionResult Index()
         {

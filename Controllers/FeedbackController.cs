@@ -29,6 +29,8 @@ namespace Cucina_De_Corazon.Controllers
                 Message = message,
                 SubmittedAt = DateTime.Now
             };
+            _context.Feedbacks.Add(feedback);
+            _context.SaveChanges();
             return Json(new { success = true, message = "Thank you for your feedback!" });
         }
     }

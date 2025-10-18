@@ -1,6 +1,7 @@
 ﻿using Cucina_De_Corazon.Context;
 using Cucina_De_Corazon.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Security.Cryptography;
@@ -16,6 +17,63 @@ namespace Cucina_De_Corazon.Controllers
         {
             _context = context;
         }
+        public IActionResult Index()
+        {
+            var users = _context.Accounts
+                .Include(a => a.Person)
+                .ToList();
+            return View(users);
+        }
+
+        [HttpGet]
+        public IActionResult CreateStaff()
+        {
+            // Optional: Check if current user is admin
+            var role = HttpContext.Session.GetString("Role");
+            if (role != "Admin")
+                return RedirectToAction("AccessDenied", "Home");
+
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult CreateStaff(string fullName, string email, string username, string password)
+        {
+            var role = HttpContext.Session.GetString("Role");
+            if (role != "Admin")
+                return Json(new { success = false, message = "Unauthorized access." });
+
+            if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password))
+                return Json(new { success = false, message = "Username and password are required." });
+
+            if (_context.Accounts.Any(a => a.Username == username))
+                return Json(new { success = false, message = "Username already exists." });
+
+            // Create new Person record
+            var person = new Person
+            {
+                FullName = fullName,
+                Email = email,
+                CreatedAt = DateTime.Now
+            };
+            _context.People.Add(person);
+            _context.SaveChanges();
+
+            // Create new Staff Account
+            var account = new Account
+            {
+                PersonId = person.PersonId,
+                Username = username,
+                Password = password, // 🔒 TODO: Hash password in production
+                Role = "Staff",
+                CreatedAt = DateTime.Now
+            };
+            _context.Accounts.Add(account);
+            _context.SaveChanges();
+
+            return Json(new { success = true, message = "Staff account created successfully!" });
+        }
+
         [HttpGet]
         public IActionResult Register()
         {

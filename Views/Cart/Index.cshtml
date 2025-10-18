@@ -32,7 +32,14 @@
                             <td class="fw-semibold">@item.ProductName</td>
                             <td>@item.Pax</td>
                             <td>₱@item.Price.ToString("N2")</td>
-                            <td>@item.Qty</td>
+                            <td>
+                                <input type="number"
+                                       class="form-control qty-input text-center"
+                                       min="1"
+                                       value="@item.Qty"
+                                       data-product-id="@item.ProductId"
+                                       style="width: 80px;" />
+                            </td>
                             <td>₱@item.Total.ToString("N2")</td>
                             <td>
                                 <form method="post" action="/Cart/Remove" class="d-inline remove-form">
@@ -96,13 +103,61 @@
 </div>
 @section Scripts {
     <script>
+        document.querySelectorAll('.qty-input').forEach(input => {
+            input.addEventListener('change', async (e) => {
+                const qty = parseInt(e.target.value);
+                const productId = e.target.getAttribute('data-product-id');
+
+                if (isNaN(qty) || qty < 1) {
+                    alert("⚠️ Quantity must be at least 1.");
+                    e.target.value = 1;
+                    return;
+                }
+
+                try {
+                    const response = await fetch('/Cart/UpdateQuantity', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ productId: parseInt(productId), quantity: qty })
+                    });
+
+                    const data = await response.json();
+
+                    if (data.success) {
+                        const row = e.target.closest('tr');
+                        row.querySelector('td:nth-child(5)').innerText = "₱" + data.itemTotal.toFixed(2);
+
+                        console.log("Cart total:", data.cartTotal);
+                    } else {
+                        alert("⚠️ " + data.message);
+                    }
+                } catch (error) {
+                    console.error("Error updating quantity:", error);
+                    alert("❌ Something went wrong. Please try again.");
+                }
+            });
+        });
+
+        $("#submitFeedbackBtn").click(() => {
+            const message = $("#feedbackComment").val(); 
+
+            fetch(`/Feedback/SubmitFeedback?message=${encodeURIComponent(message)}`)
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) { 
+                        location.href = "/";
+                    } else {
+                        alert(data.message);
+                    }
+                })
+                .catch(err => console.error("Error submitting feedback:", err));
+        });
+
         let unavailableDates = [];
 
-        // Fetch unavailable dates
         fetch("/Cart/GetUnavailableDates")
             .then(res => res.json())
             .then(dates => {
-                // Keep as simple strings (yyyy-MM-dd)
                 unavailableDates = dates.map(d => d.split('T')[0]);
                 console.log("Unavailable Dates:", unavailableDates);
             });
