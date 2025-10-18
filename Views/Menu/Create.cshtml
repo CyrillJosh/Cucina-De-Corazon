@@ -1,0 +1,48 @@
+﻿@model Cucina_De_Corazon.Models.Product
+@{
+    ViewData["Title"] = "Add Product";
+}
+
+<div class="container mt-5 d-flex justify-content-center">
+    <div class="card shadow-sm p-4" style="max-width:500px; width:100%;">
+        <h3 class="text-center mb-4 fw-bold">Add Product</h3>
+
+        <form asp-action="Create" method="post">
+            <div class="mb-3">
+                <label class="form-label fw-semibold">Name</label>
+                <input asp-for="ProductName" class="form-control rounded-2" placeholder="Product Name" required />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-semibold">Description</label>
+                <textarea asp-for="ProductDescription" class="form-control rounded" placeholder="Description" rows="3" required></textarea>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-semibold">Price</label>
+                <div class="d-flex gap-2">
+                    <input type="number" step="1" min="0" name="MinPrice" class="form-control rounded-2" placeholder="0.00 (5 pax)" required />
+                    <span class="align-self-center fw-bold">-</span>
+                    <input type="number" step="1" min="0" name="MaxPrice" class="form-control rounded-2" placeholder="0.00 (10 pax)" required />
+                </div>
+
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-semibold">Category</label>
+                <select asp-for="CategoryId" class="form-select rounded-2" asp-items="ViewBag.Categories" required>
+                    <option value="" disabled selected>Select Category</option>
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-semibold">Picture (optional)</label>
+                <input asp-for="ProductPicture" class="form-control rounded-2" placeholder="Image filename" />
+            </div>
+
+            <div class="d-grid">
+                <button type="submit" class="btn btn-warning text-white fw-bold" style="background: #f57c1f;">Save</button>
+            </div>
+        </form>
+    </div>
+</div>

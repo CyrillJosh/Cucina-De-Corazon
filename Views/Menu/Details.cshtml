@@ -1,0 +1,41 @@
+﻿@model Cucina_De_Corazon.Models.Product
+@{
+    ViewData["Title"] = "Product Details";
+}
+
+<div class="container mt-5 d-flex justify-content-center">
+    <div class="card shadow-sm p-4" style="max-width:500px; width:100%;">
+        <h3 class="text-center mb-4 fw-bold">Product Details</h3>
+
+        <div class="mb-3">
+            <label class="fw-bold">Name:</label>
+            <p>@Model.ProductName</p>
+        </div>
+
+        <div class="mb-3">
+            <label class="fw-bold">Description:</label>
+            <p>@Model.ProductDescription</p>
+        </div>
+
+        <div class="mb-3">
+            <label class="fw-bold">Price:</label>
+            <p>₱@Model.ProductPrice</p>
+        </div>
+
+        <div class="mb-3">
+            <label class="fw-bold">Category:</label>
+            <p>@Model.Category?.CategoryName</p>
+        </div>
+
+        @if (Model.ProductPicture !=null)
+        {
+            <div class="mb-3">
+                <img src="~/images/@Model.ProductPicture" class="img-fluid rounded shadow" />
+            </div>
+        }
+
+        <div class="d-grid">
+            <a asp-action="Index" class="btn btn-warning text-white fw-bold" style="background: #f57c1f;">Back to List</a>
+        </div>
+    </div>
+</div>

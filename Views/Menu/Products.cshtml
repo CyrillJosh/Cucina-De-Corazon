@@ -1,0 +1,241 @@
+﻿@model List<Product>
+@{
+	ViewData["Title"] = Model.First().Category.CategoryName;
+}
+
+<section class="container my-5 h-100">
+    <div class="row">
+        @foreach (var p in Model)
+        {
+            <div class="col-md-3 mb-4 d-flex">
+                <div class="card food-card shadow-sm w-100">
+                    <img src="~/images/@p.ProductPicture"
+                         class="card-img-top rounded-top"
+                         alt="@p.ProductName"
+                         style="height: 180px; object-fit: cover;">
+                    <div class="card-body text-center">
+                        <h5 class="card-title fw-bold">@p.ProductName</h5>
+                        <p class="card-text text-muted mb-2">@p.ProductDescription</p>
+                        <p class="card-text text-dark fw-semibold">₱@p.ProductPrice</p>
+                        <button style=" display: inline-block;
+                                background-color: #f57c1f;
+                                color: #fff;
+                                font-weight: bold;
+                                border: none;
+                                border-radius: 6px;
+                                padding: 10px 24px;
+                                font-size: 1rem;
+                                cursor: pointer;
+                                transition: all 0.3s ease; /* smooth transition */
+                                box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+                                text-transform: uppercase;"
+                                class="btn btn-warning text-white order-btn"
+                                data-id="@p.ProductId"
+                                data-name="@p.ProductName"
+                                data-price="@p.ProductPrice"
+                                data-desc="@p.ProductDescription"
+                                data-img="~/images/@p.ProductPicture"
+                                data-bs-toggle="modal"
+                                data-bs-target="#orderModal">
+                            Order
+                        </button>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</section>
+<!-- ORDER MODAL -->
+<div class="modal fade" id="orderModal" tabindex="-1" aria-labelledby="orderModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg rounded-4" style="overflow: hidden;">
+
+            <!-- Header -->
+            <div class="modal-header" style="background-color: #f57c1f; color: #fff;">
+                <h5 class="modal-title fw-bold" id="orderModalLabel">Order Details</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <!-- Body -->
+            <div class="modal-body px-4 py-3">
+                <div class="row align-items-center g-4">
+
+                    <!-- Left: Image -->
+                    <div class="col-md-6 text-center">
+                        <img id="modalImg" src="" class="img-fluid rounded-3 shadow-sm" style="max-height: 280px; object-fit: cover;">
+                    </div>
+
+                    <!-- Right: Details -->
+                    <div class="col-md-6">
+                        <h4 id="modalName" class="fw-bold mb-2 text-dark"></h4>
+                        <p id="modalDesc" class="text-muted small mb-3"></p>
+
+                        <!-- Pax Selection -->
+                        <div class="mb-3">
+                            <label for="paxSelect" class="fw-bold mb-1">Select Pax</label>
+                            <select id="paxSelect" class="form-select border-2" style="border-color: #f57c1f;">
+                                <option value="" selected disabled>Choose an option</option>
+                                <option value="0">5</option>
+                                <option value="1">10</option>
+                            </select>
+                        </div>
+
+                        <!-- Total -->
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <span class="fw-bold text-dark">Total:</span>
+                            <span class="fw-bold fs-5" style="color: #f57c1f;">₱<span id="displayPrice">0.00</span></span>
+                        </div>
+
+                        <!-- Quantity -->
+                        <div class="d-flex align-items-center justify-content-center gap-3 mb-3">
+                            <button class="btn btn-outline-secondary rounded-circle" id="minusBtn" style="width: 38px; height: 38px;">−</button>
+                            <span id="qty" class="fw-bold fs-5">1</span>
+                            <button class="btn btn-outline-secondary rounded-circle" id="plusBtn" style="width: 38px; height: 38px;">+</button>
+                        </div>
+
+                        <!-- Add to Cart -->
+                        <form id="addToCartForm" method="post" action="/Cart/AddToCart">
+                            <input type="hidden" name="productId" id="modalProductId" />
+                            <input type="hidden" name="productName" id="modalProductName" />
+                            <input type="hidden" name="productPic" id="modalProductPic" />
+                            <input type="hidden" name="price" id="modalProductPrice" />
+                            <input type="hidden" name="qty" id="modalQty" value="1" />
+                            <input type="hidden" name="pax" id="modalPax" />
+                            <button type="submit" class="btn  w-100" style="background: #f57c1f;
+                                font-weight: bold;">
+                                Add to Cart
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const qtyEl = document.getElementById("qty");
+            const paxSelect = document.getElementById("paxSelect");
+            const displayPrice = document.getElementById("displayPrice");
+
+            let qty = 1;
+            let basePrice = 0;
+
+            // When "Order" button is clicked
+            document.querySelectorAll(".order-btn").forEach(btn => {
+                btn.addEventListener("click", function () {
+					paxSelect.value = "";
+                    const name = this.dataset.name;
+                    const desc = this.dataset.desc;
+                    const img = this.dataset.img;
+                    const id = this.dataset.id;
+                    const price = this.dataset.price;
+
+                    document.getElementById("modalName").innerText = name;
+                    document.getElementById("modalDesc").innerText = desc;
+                    document.getElementById("modalImg").src = img;
+                    document.getElementById("modalProductId").value = id;
+                    document.getElementById("modalProductName").value = name;
+                    document.getElementById("modalProductPic").value = img;
+
+                    qty = 1;
+                    qtyEl.innerText = qty;
+                    document.getElementById("modalQty").value = qty;
+
+                    // Load pax options dynamically
+                    basePrice = price;
+                    displayPrice.innerText = "0.00";
+                });
+            });
+
+            paxSelect.addEventListener("change", () => {
+                updateTotalPrice();
+                document.getElementById("modalPax").value = paxSelect.value == 0? 5 : 10;
+            });
+
+            document.getElementById("plusBtn").onclick = () => { qty++; updateQty(); };
+            document.getElementById("minusBtn").onclick = () => { if (qty > 1) qty--; updateQty(); };
+
+            function updateQty() {
+                qtyEl.innerText = qty;
+                document.getElementById("modalQty").value = qty;
+                updateTotalPrice();
+            }
+
+            function updateTotalPrice() {
+                if (basePrice) {
+                    const paxIndex = parseInt(paxSelect.value); 
+                    const prices = basePrice.split('-').map(Number); 
+
+                    const unitPrice = prices[paxIndex] || 0; 
+                    const total = unitPrice * qty;
+
+                    displayPrice.innerText = total.toLocaleString("en-PH", {
+                        minimumFractionDigits: 2
+                    });
+
+                    document.getElementById("modalProductPrice").value = total;
+                }
+            }
+
+            const form = document.querySelector("#orderModal form");
+
+            form.addEventListener("submit", async (e) => {
+                e.preventDefault();
+
+                const productId = document.getElementById("modalProductId").value.trim();
+                const productName = document.getElementById("modalProductName").value.trim();
+                const productPic = document.getElementById("modalProductPic").value.trim();
+                const price = document.getElementById("modalProductPrice").value.trim();
+                const qty = document.getElementById("modalQty").value.trim();
+                const pax =  document.getElementById("modalPax").value;
+
+                // ✅ VALIDATIONS
+                if (!productId || !productName) {
+                    alert("⚠️ Product details are incomplete.");
+                    return;
+                }
+
+                if (!pax) {
+                    alert("⚠️ Please select a Pax option before adding to cart.");
+                    return;
+                }
+
+                if (!qty || isNaN(qty) || qty <= 0) {
+                    alert("⚠️ Please enter a valid quantity.");
+                    return;
+                }
+
+                if (!price || isNaN(price) || price <= 0) {
+                    alert("⚠️ Price is invalid. Please choose a Pax option again.");
+                    return;
+                }
+
+                const formData = new FormData(form);
+
+                try {
+                    const response = await fetch(form.action, {
+                        method: "POST",
+                        body: formData
+                    });
+
+                    const data = await response.json();
+
+                    if (data.success) {
+                        alert("✅ " + data.message);
+                        const modal = bootstrap.Modal.getInstance(document.getElementById("orderModal"));
+                        modal.hide();
+                    } else {
+                        alert("⚠️ " + data.message);
+                    }
+                } catch (error) {
+                    console.error("Error adding to cart:", error);
+                    alert("❌ Something went wrong. Please try again.");
+                }
+            });
+        });
+    </script>
+
+}

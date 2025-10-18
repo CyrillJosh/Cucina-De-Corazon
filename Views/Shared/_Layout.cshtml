@@ -1,0 +1,72 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Cucina_De_Corazon</title>
+
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/Cucina_De_Corazon.styles.css" asp-append-version="true" />
+</head>
+<body class="d-flex flex-column h-100">
+    <header>
+        <nav class="navbar navbar-expand-lg" style="background: #f57c1f;
+                                font-weight: bold;">
+            <div class="container-fluid">
+                <div class="collapse navbar-collapse">
+                    <div class="w-100 d-flex flex-row" style="font-size: 1.25rem; font-weight: bold;">
+                        <a class="text-decoration-none text-white" href="/">Home</a>
+                        <div class="flex-grow-1 d-flex flex-row justify-content-center gap-4">
+                            @{
+                                var role = Context.Session.GetString("Role");
+                                var sessionUser = Context.Session.GetString("User") ?? "";
+                            }
+                            @if (role == "Admin")
+                            {
+                                <a class=" text-decoration-none text-white" href="/Records">Records</a>
+                                <a class=" text-decoration-none text-white" href="/Menu">Menu</a>
+                            }else{
+                                <a class=" text-decoration-none text-white" href="#aboutus">About Us</a>
+                                <a class=" text-decoration-none text-white" href="#services">Our Services</a>
+                                <a class=" text-decoration-none text-white" href="#booking">Book Your Event</a>
+                                @if(!string.IsNullOrEmpty(sessionUser))
+                                {
+                                    <a class=" text-decoration-none text-white" href="/Menu/MyOrders">My Orders</a>
+                                }
+                            }
+
+                        </div>
+                        <div class="d-flex flex-row gap-5">
+                            <a href="/Cart" class=" text-decoration-none text-white">Cart</a>
+                            @if (string.IsNullOrEmpty(sessionUser))
+                            {
+                                <a class=" text-decoration-none text-white" asp-controller="User" asp-action="Login">Login</a>
+                            }
+                            else
+                            {
+                                <a class="text-decoration-none text-white" asp-controller="User" asp-action="Logout">Logout</a>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="container flex-grow-1">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+  @*   <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2025 - Cucina_De_Corazon - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        </div>
+    </footer> *@
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

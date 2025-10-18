@@ -1,0 +1,155 @@
+﻿@model Cucina_De_Corazon.Models.Order
+@{
+    ViewData["Title"] = "Edit Order";
+    var products = ViewBag.Products as List<Cucina_De_Corazon.Models.Product> ?? new List<Cucina_De_Corazon.Models.Product>();
+}
+
+<div class="container mt-5">
+    <h2 class="text-center fw-bold mb-4">Edit Order #@Model.OrderId</h2>
+
+    <form asp-action="Edit" method="post">
+        <input type="hidden" name="id" value="@Model.OrderId" />
+
+        <div class="card shadow-sm p-3 mb-3 rounded-3">
+            <table class="table table-striped align-middle">
+                <thead class="table-warning">
+                    <tr>
+                        <th>Product</th>
+                        <th>Price Range</th>
+                        <th>Quantity</th>
+                        <th>Subtotal</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="order-items">
+                    @foreach (var item in Model.OrderProducts)
+                    {
+                        <tr data-id="@item.OrderId" data-product-id="@item.ProductId">
+                            <td>@item.Product.ProductName</td>
+                            <td>₱@item.Price</td>
+                            <td><input type="number" class="form-control text-center qty-input" min="1" value="@item.Quantity" /></td>
+                            <td class="subtotal fw-semibold">₱@(item.Price * item.Quantity)</td>
+                            <td><button type="button" class="btn btn-sm btn-danger remove-item"><i class="bi bi-trash"></i> Remove</button></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <div class="mb-3">
+            <label class="fw-semibold">Add Product:</label>
+            <select id="addProduct" class="form-select">
+                <option value="">-- Select a Product --</option>
+                @foreach (var p in products)
+                {
+                    <option value="@p.ProductId" data-price="@p.ProductPrice">@p.ProductName (₱@p.ProductPrice)</option>
+                }
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label class="fw-semibold">Special Instructions:</label>
+            <textarea class="form-control" name="specialInstructions" rows="3">@Model.Instructions</textarea>
+        </div>
+
+        <div class="d-flex justify-content-between align-items-center">
+            <h4 class="fw-bold">Total: ₱<span id="total">@Model.Bills.FirstOrDefault()?.Total.ToString("N2")</span></h4>
+            <button type="submit" class="btn btn-warning text-white fw-bold">Save Changes</button>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <script>
+        function recalcTotal() {
+            let total = 0;
+            document.querySelectorAll('.subtotal').forEach(sub => {
+                total += parseFloat(sub.innerText.replace('₱', '')) || 0;
+            });
+            document.getElementById('total').innerText = total.toFixed(2);
+        }
+
+        function reindexHiddenInputs() {
+            document.querySelectorAll('#order-items tr[data-new="true"]').forEach((row, i) => {
+                row.querySelectorAll('input[type="hidden"]').forEach(input => {
+                    input.name = input.name.replace(/updatedProducts\[\d+\]/, `updatedProducts[${i}]`);
+                });
+            });
+        }
+
+        document.querySelectorAll('.qty-input').forEach(input => {
+            input.addEventListener('change', async (e) => {
+                const row = e.target.closest('tr');
+                const orderProductId = row.getAttribute('data-product-id');
+                const qty = e.target.value;
+
+                const formData = new URLSearchParams();
+                formData.append('orderProductId', orderProductId);
+                formData.append('quantity', qty);
+
+                const res = await fetch('/Order/UpdateQuantity', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: formData.toString()
+                });
+
+                const data = await res.json();
+                const price = parseFloat(row.querySelector('td:nth-child(2)').innerText.replace('₱', ''));
+                row.querySelector('.subtotal').innerText = '₱' + (price * qty).toFixed(2);
+                document.getElementById('total').innerText = data.success ? data.newTotal : recalcTotal();
+            });
+        });
+
+        document.getElementById('addProduct').addEventListener('change', function () {
+            const selected = this.options[this.selectedIndex];
+            const priceText = selected.getAttribute('data-price');
+            const price = priceText.includes('-') ? priceText.split('-')[0] : priceText;
+            const productName = selected.text.split('(')[0].trim();
+            const id = selected.value;
+
+            if (!id) return;
+
+            const tbody = document.getElementById('order-items');
+            const newRow = document.createElement('tr');
+            newRow.setAttribute('data-product-id', id);
+            newRow.setAttribute('data-new', 'true');
+            newRow.innerHTML = `
+                <td>${productName}</td>
+                <td>₱${parseFloat(price).toFixed(2)}</td>
+                <td><input type="number" class="form-control text-center qty-input" min="1" value="1" /></td>
+                <td class="subtotal fw-semibold">₱${parseFloat(price).toFixed(2)}</td>
+                <td><button type="button" class="btn btn-sm btn-danger remove-item"><i class="bi bi-trash"></i> Remove</button></td>
+                <input type="hidden" name="updatedProducts[0].OrderId" value="${@Model.OrderId}" />
+                <input type="hidden" name="updatedProducts[0].ProductId" value="${id}" />
+                <input type="hidden" name="updatedProducts[0].Price" value="${price}" />
+                <input type="hidden" name="updatedProducts[0].Quantity" value="1" />
+            `;
+            tbody.appendChild(newRow);
+            this.value = "";
+            reindexHiddenInputs();
+            recalcTotal();
+        });
+
+        document.addEventListener('click', async (e) => {
+            if (e.target.closest('.remove-item')) {
+                const row = e.target.closest('tr');
+                const productId = row.getAttribute('data-product-id');
+                const orderId = row.getAttribute('data-id');
+
+                if (confirm("Remove this product from your order?")) {
+                    if (!row.hasAttribute('data-new')) {
+                        await fetch('/Order/RemoveProduct', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ orderId: parseInt(orderId), productId: parseInt(productId) })
+                        });
+                    }
+
+                    row.remove();
+                    reindexHiddenInputs();
+                    recalcTotal();
+                }
+            }
+        });
+    </script>
+}

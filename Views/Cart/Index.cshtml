@@ -1,0 +1,208 @@
+﻿@model List<Cucina_De_Corazon.Controllers.CartController.CartItem>
+
+@{
+    ViewData["Title"] = "Your Cart";
+}
+
+<div class="container mt-5 h-100">
+    <h2 class="mb-4 text-center fw-bold">Your Cart</h2>
+
+    @if (Model.Count == 0)
+    {
+        <div class="alert alert-info text-center rounded-3">Your cart is empty.</div>
+    }
+    else
+    {   
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped align-middle rounded-3">
+                <thead class="table-warning">
+                    <tr>
+                        <th>Product</th>
+                        <th>Pax</th>
+                        <th>Price</th>
+                        <th>Qty</th>
+                        <th>Total</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td class="fw-semibold">@item.ProductName</td>
+                            <td>@item.Pax</td>
+                            <td>₱@item.Price.ToString("N2")</td>
+                            <td>@item.Qty</td>
+                            <td>₱@item.Total.ToString("N2")</td>
+                            <td>
+                                <form method="post" action="/Cart/Remove" class="d-inline remove-form">
+                                    <input type="hidden" name="productId" value="@item.ProductId" />
+                                    <button type="submit" class="btn btn-danger btn-sm fw-bold">Remove</button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="d-flex justify-content-between mt-4">
+            <button class="btn btn-warning fw-bold rounded-2 px-4"
+                    data-bs-toggle="modal"
+                    data-bs-target="#confirmOrderModal">
+                Confirm Order
+            </button>
+            <form method="post" action="/Cart/Clear" id="clearCartForm">
+                <button type="submit" class="btn btn-danger fw-bold rounded-2 px-4">Clear Cart</button>
+            </form>
+        </div>
+    }
+</div>
+<div class="modal fade" id="confirmOrderModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content rounded-3">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirm Your Order</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <label class="form-label">Choose Reservation Date:</label>
+                <input type="date" id="reservedDate" min="@DateTime.Now.ToString("yyyy-MM-dd")" class="form-control mb-3" />
+
+                <label class="form-label">Instructions (optional):</label>
+                <textarea id="instructions" class="form-control" rows="3"></textarea>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-warning" id="confirmOrderBtn">Confirm Order</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="feedbackModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content rounded-3">
+            <div class="modal-header">
+                <h5 class="modal-title">We value your opinion</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <label class="form-label">leave us a comment</label>
+                <textarea id="feedbackComment" class="form-control" rows="4" placeholder="Your comments..."></textarea>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-warning" id="submitFeedbackBtn">Submit Feedback</button>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script>
+        let unavailableDates = [];
+
+        // Fetch unavailable dates
+        fetch("/Cart/GetUnavailableDates")
+            .then(res => res.json())
+            .then(dates => {
+                // Keep as simple strings (yyyy-MM-dd)
+                unavailableDates = dates.map(d => d.split('T')[0]);
+                console.log("Unavailable Dates:", unavailableDates);
+            });
+
+        const dateInput = document.getElementById("reservedDate");
+
+        dateInput.addEventListener("change", () => {
+            const selectedDate = dateInput.value;
+            console.log("Selected:", selectedDate);
+
+            if (unavailableDates.includes(selectedDate)) {
+                alert("❌ Selected date is unavailable.");
+                dateInput.value = "";
+            }
+        });
+
+
+        // Confirm order
+        document.getElementById("confirmOrderBtn").addEventListener("click", async () => {
+            const reservedDate = dateInput.value;
+            const instructions = document.getElementById("instructions").value;
+
+            console.log(reservedDate, instructions)
+            if (!reservedDate) {
+                alert("Please select a date.");
+                return;
+            }
+
+            try {
+                const formData = new FormData();
+                formData.append("reservedDate", reservedDate);
+                formData.append("instructions", instructions);
+
+                const response = await fetch("/Cart/ConfirmOrder", {
+                    method: "POST",
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                if (data.location) {
+                    location.href = data.location;
+                } else if (data.success) {
+                    var confirmModalEl = bootstrap.Modal.getInstance(document.getElementById('confirmOrderModal'));
+                    confirmModalEl.hide();
+
+                    var feedbackModal = new bootstrap.Modal(document.getElementById('feedbackModal'));
+                    feedbackModal.show();
+                } else {
+                    alert("⚠️ " + data.message);
+                }
+            } catch (err) {
+                console.error(err);
+                alert("❌ Something went wrong.");
+            }
+        });
+
+        document.querySelectorAll(".remove-form").forEach(form => {
+            form.addEventListener("submit", async e => {
+                e.preventDefault();
+                if (!confirm("Remove this item from your cart?")) return;
+
+                const formData = new FormData(form);
+                try {
+                    const response = await fetch(form.action, {
+                        method: "POST",
+                        body: formData
+                    });
+                    const data = await response.json();
+                    if (data.success) {
+                        alert("✅ " + data.message);
+                        location.reload();
+                    } else {
+                        alert("⚠️ " + data.message);
+                    }
+                } catch (error) {
+                    console.error(error);
+                    alert("❌ Something went wrong. Please try again.");
+                }
+            });
+        });
+
+        const clearForm = document.getElementById("clearCartForm");
+        clearForm.addEventListener("submit", async e => {
+            e.preventDefault();
+            if (!confirm("Are you sure you want to clear your entire cart?")) return;
+
+            try {
+                const response = await fetch(clearForm.action, { method: "POST" });
+                const data = await response.json();
+                if (data.success) {
+                    alert("✅ " + data.message);
+                    location.reload();
+                } else {
+                    alert("⚠️ " + data.message);
+                }
+            } catch (error) {
+                console.error(error);
+                alert("❌ Something went wrong. Please try again.");
+            }
+        });
+    </script>
+}

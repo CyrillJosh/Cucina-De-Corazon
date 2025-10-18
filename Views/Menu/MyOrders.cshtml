@@ -1,0 +1,71 @@
+﻿@model List<Cucina_De_Corazon.Models.Bill>
+@{
+    ViewData["Title"] = "My Orders";
+}
+
+<div class="container mt-5">
+    <h2 class="text-center mb-4 fw-bold">My Orders</h2>
+
+    @if (Model == null || !Model.Any())
+    {
+        <div class="alert alert-info text-center rounded-3">You have no orders yet.</div>
+    }
+    else
+    {
+        @foreach(var m in Model)
+        {
+            <div class="text-center mb-3">
+                <p class="fs-5 fw-semibold mt-2">Total: ₱@m.Total.ToString("N2")</p>
+            </div>
+
+            @foreach (var order in m.Orders)
+            {
+                <div class="card shadow-sm mb-3 rounded-3">
+                    <div class="card-header fw-bold">
+                        Order ID: @order.OrderId
+                        @if (order.ReservedDate.HasValue)
+                        {
+                            <span class="float-end">Reserved: @order.ReservedDate.Value.ToString("yyyy-MM-dd")</span>
+                        }
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-bordered table-striped align-middle mb-0">
+                            <thead class="table-warning">
+                                <tr>
+                                    <th>Product</th>
+                                    <th>Price</th>
+                                    <th>Qty</th>
+                                    <th>Subtotal</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var product in order.OrderProducts)
+                                {
+                                    <tr>
+                                        <td class="fw-semibold">@product.Product.ProductName</td>
+                                        <td>₱@product.Price</td>
+                                        <td>@product.Quantity</td>
+                                        <td>₱@(product.Price* product.Quantity)</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                        @if (order.ReservedDate.HasValue && order.ReservedDate.Value > DateTime.Now.AddDays(2))
+                        {
+                            <a asp-action="Edit" asp-controller="Order" asp-route-id="@order.OrderId"
+                                class="btn btn-sm btn-primary float-end m-2">
+                                Edit Order
+                            </a>
+                        }
+                        else
+                        {
+                            <span class="btn btn-sm btn-primary disabled float-end m-2">
+                                Order cannot be edited    
+                            </span>
+                        }
+                    </div>
+                </div>
+            }
+        }
+    }
+</div>

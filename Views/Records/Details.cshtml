@@ -1,0 +1,79 @@
+﻿@model Cucina_De_Corazon.Models.Bill
+@{
+    ViewData["Title"] = $"Bill {Model.BillId} Details";
+}
+
+<div class="container mt-5">
+    <h2 class="text-center mb-4 fw-bold">Bill Details</h2>
+
+    @if (Model.Person != null)
+    {
+        <div class="mb-3 text-center">
+            <p class="mb-1 fw-semibold">Ordered by: @Model.Person.FullName</p>
+            <p class="mb-0 text-muted">Email: @Model.Person.Email</p>
+            <p class="mb-0 text-muted">Contact #: @Model.Person.ContactNumber</p>
+        </div>
+    }
+
+    <p class="text-center fs-5 fw-semibold">Total: ₱@Model.Total.ToString("N2")</p>
+    @if (Model.Status == "Pending")
+    {
+        <div class="text-center my-4">
+            <form asp-action="ConfirmBill" asp-route-id="@Model.BillId" method="post">
+                <button type="submit" class="btn btn-success fw-bold px-4">
+                    Confirm Bill
+                </button>
+            </form>
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-success text-center mt-4 rounded-3">
+            This bill has been <strong>confirmed</strong>.
+        </div>
+    }
+
+    @if (!Model.Orders.Any())
+    {
+        <div class="alert alert-info text-center rounded-3">No orders for this bill.</div>
+    }
+    else
+    {
+        @foreach (var order in Model.Orders)
+        {
+            <div class="card shadow-sm mb-3 rounded-3">
+                <div class="card-header fw-bold">
+                    Order ID: @order.OrderId
+                    @if (order.ReservedDate.HasValue)
+                    {
+                        <span class="float-end">Reserved: @order.ReservedDate.Value.ToString("yyyy-MM-dd")</span>
+                    }
+                </div>
+
+                <div class="card-body">
+                    <table class="table table-bordered table-striped align-middle mb-0">
+                        <thead class="table-warning">
+                            <tr>
+                                <th>Product</th>
+                                <th>Price</th>
+                                <th>Qty</th>
+                                <th>Subtotal</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var product in order.OrderProducts)
+                            {
+                                <tr>
+                                    <td class="fw-semibold">@product.Product.ProductName</td>
+                                    <td>₱@product.Price</td>
+                                    <td>@product.Quantity</td>
+                                    <td>₱@(product.Price* product.Quantity)</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        }
+    }
+</div>
