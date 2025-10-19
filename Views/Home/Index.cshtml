@@ -2,49 +2,53 @@
     ViewData["Title"] = "Home Page";
 }
 @model List<Category>
-<div class="row h-100">
-    <div class="col-md-7">
-        <h1 class="display-4 text-center">Welcome to Cucina De Corazon!</h1>
-        <h2 class="text-center mt-4 mb-3"><b>One of the best food catering and events services in the Philippines</b></h2>
-        <p class="text-center">Excellent cuisine and catering services tailored to your budget and needs.</p>
+<div class="h-100 d-flex flex-row">
+    <div class="h-100 col-md-7 ps-5 py-5">
+        <div class="h-100 w-100 py-5">
+            <h5 class="text-start" style="color: #EB6A00">CUCINA DE CORAZON FOOD AND CATERING SERVICES</h5>
+            <h1 class="text-start mt-4 mb-3 text-kaisei fw-bold" style="font-size: 70px">Quality you can taste, service you can trust.</h1>
+            <p class="text-start fw-bold">Excellent cuisine and catering services tailored to your budget and needs.</p>
+            <div class="text-center w-100 mt-4">
+                <!-- Trigger floating menu -->
+                <button class="btn btn-lg text-center" onclick="toggleFloatingMenu()"
+                        data-bs-toggle="modal" data-bs-target="#Category"
+                        style="background-color: #f57c1f; color: #fff; font-weight: bold;
+                        box-shadow: 2px 4px 8px rgba(0,0,0,0.15); border-radius: 6px; padding: 12px 36px;">
+                    OUR FOOD MENU
+                </button>
+            </div>
+        </div>
+        <div class="h-100 w-100 d-flex align-items-bottom justify-content-center">
+            <img src="~/images/CATERINGFOOD.jpg" alt="" class="img-fluid rounded shadow" style="max-height:400px;">
+        </div>
     </div>
-    <div class="col-md-5 d-flex align-items-bottom justify-content-center">
-        <img src="~/images/CATERINGFOOD.jpg" alt="" class="img-fluid rounded shadow" style="max-height:400px;">
-    </div>
-    <div class="text-left-center mt-4">
-        <!-- Trigger floating menu -->
-        <button class="btn btn-lg" onclick="toggleFloatingMenu()"
-                data-bs-toggle="modal" data-bs-target="#Category"
-                style="background-color: #f57c1f; color: #fff; font-weight: bold;
-               box-shadow: 2px 4px 8px rgba(0,0,0,0.15); border-radius: 6px; padding: 12px 36px;">
-            OUR FOOD MENU
-        </button>
+    <div class="h-100 col-md-5">
+        <img class="h-100 w-100" src="/images/menus.jpg" alt="Cucina de Corazon" />
     </div>
 </div>
 
 
-<!-- Floating Menu -->
 <div class="modal fade" id="Category" aria-labelledby="CategoryModal" aria-hidden="true" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content rounded-3">
-            <div class="modal-header">
-                <h3 class="modal-title">Cucina De Corazon Menu</h3>
+            <div class="modal-header bg-gray">
+                <h3 class="modal-title">FOOD MENU</h3>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body d-flex flex-column gap-2">
+            <div class="modal-body d-flex flex-column gap-3 px-3" style="max-height: 300px; overflow-y: auto;">
                 @foreach (var c in Model)
                 {
-                    <a class="text-decoration-none text-center" 
-                        style="background: #f57c1f;
-                                color: #fff;
-                                font-weight: bold;
-                                padding: 10px 20px;
-                                border-radius: 6px;
-                                text-decoration: none;
-                                transition: all 0.3s ease;" 
-                        asp-controller="Menu" 
-                        asp-action="Products" 
-                        asp-route-category="@c.CategoryId" class="menu-link">
+                    <a class="text-decoration-none text-center"
+                       style="background: #f57c1f;
+                                    color: #fff;
+                                    font-weight: bold;
+                                    padding: 10px 20px;
+                                    border-radius: 6px;
+                                    text-decoration: none;
+                                    transition: all 0.3s ease;"
+                       asp-controller="Menu"
+                       asp-action="Products"
+                       asp-route-category="@c.CategoryId" class="menu-link">
                         @c.CategoryName
                     </a>
                 }
@@ -55,5 +59,4 @@
         </div>
     </div>
 </div>
-
 

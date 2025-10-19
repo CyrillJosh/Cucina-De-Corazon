@@ -2,12 +2,12 @@
     ViewData["Title"] = "Login";
 }
 
-<div class="container mt-5 h-100">
-    <div class="row justify-content-center">
+<div class="container h-100 w-100">
+    <div class="h-100 w-100 d-flex justify-content-center align-items-center">
         <div class="col-md-5">
-            <div class="card shadow-sm">
+            <div class="card shadow-sm bg-orange">
                 <div class="card-body p-4">
-                    <h3 class="card-title text-center mb-4 fw-bold" style="color:#f57c1f;">Login</h3>
+                    <h3 class="card-title text-center mb-4 fw-bold text-white">Login</h3>
 
                     @if (ViewBag.Error != null)
                     {
@@ -21,23 +21,22 @@
 
                     <form method="post" asp-action="Login">
                         <div class="mb-3">
-                            <label for="username" class="form-label">Username</label>
-                            <input type="text" name="username" class="form-control" id="username" required />
+                            <label for="username" class="form-label text-white">Username</label>
+                            <input type="text" name="username" class="form-control shadow" id="username" required />
                         </div>
                         <div class="mb-3">
-                            <label for="password" class="form-label">Password</label>
-                            <input type="password" name="password" class="form-control" id="password" required />
+                            <label for="password" class="form-label text-white">Password</label>
+                            <input type="password" name="password" class="form-control shadow" id="password" required />
                         </div>
-                        <div class="d-grid">
-                            <button type="submit" class="btn btn-warning text-white fw-bold" style="background: #f57c1f;
-                                font-weight: bold;">
+                        <div class="d-flex justify-content-center">
+                            <button type="submit" class="btn text-orange fw-bold bg-white px-5">
                                 Login
                             </button>
                         </div>
                     </form>
 
                     <p class="mt-3 text-center">
-                        Don't have an account? <a asp-action="Register" style="color:#f57c1f;">Register here</a>
+                        Don't have an account? <a asp-action="Register" class="text-white">Register here</a>
                     </p>
                 </div>
             </div>

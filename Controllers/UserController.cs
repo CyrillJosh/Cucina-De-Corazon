@@ -147,6 +147,14 @@ namespace Cucina_De_Corazon.Controllers
             {
                 HttpContext.Session.SetInt32("User", account.AccountId);
                 HttpContext.Session.SetString("Role", account.Role);
+                if(account.Role == "Admin")
+                {
+                    return RedirectToAction("Index", "Menu");
+                }
+                else if (account.Role == "Staff")
+                {
+                    return RedirectToAction("Calendar", "Event");
+                }
                 return RedirectToAction("Index", "Home");
             }
 

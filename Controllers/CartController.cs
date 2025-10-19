@@ -21,6 +21,7 @@ namespace Cucina_De_Corazon.Controllers
         //    Task.Run(() => emailService.SendOrderConfirmationAsync("odatocyrilljosh@gmail.com", "Cyrill Josh", DateTime.Now));
         //    return RedirectToAction("Index");
         //}
+
         public IActionResult GetUnavailableDates()
         {
             var dates = _context.Orders
@@ -31,17 +32,18 @@ namespace Cucina_De_Corazon.Controllers
             return Json(dates);
         }
         [HttpPost]
-        public IActionResult ConfirmOrder(DateTime? reservedDate, string instructions = "", string address)
+        [HttpPost]
+        public IActionResult ConfirmOrder(string address, DateTime? reservedDate = null, string instructions = "")
         {
             int? sessionid = HttpContext.Session.GetInt32("User");
-            if (sessionid == null || sessionid <= 0)
+            if (sessionid <= 0)
                 return Json(new { location = "/User/Login" });
-
-            if (string.IsNullOrEmpty(address))
-                return Json(new { success = false, message = "Please provide a valid address." });
 
             if (!reservedDate.HasValue)
                 return Json(new { success = false, message = "Please select a valid reservation date." });
+
+            if (string.IsNullOrEmpty(address))
+                return Json(new { success = false, message = "Please provide a delivery or event address." });
 
             var cartJson = HttpContext.Session.GetString("Cart");
             if (string.IsNullOrEmpty(cartJson))
@@ -96,6 +98,7 @@ namespace Cucina_De_Corazon.Controllers
 
             return Json(new { success = true, message = "Order confirmed successfully!" });
         }
+
 
         [HttpPost]
         public IActionResult AddToCart(int productId, string productName, string productPic, decimal price, int qty, int pax)

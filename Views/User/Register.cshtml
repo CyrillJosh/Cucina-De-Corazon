@@ -2,12 +2,12 @@
     ViewData["Title"] = "Register";
 }
 
-<div class="container mt-5 h-100">
-    <div class="row justify-content-center">
+<div class="container h-100 w-100 overflow-y-auto">
+    <div class="h-100 w-100 d-flex justify-content-center align-items-center">
         <div class="col-md-5">
-            <div class="card shadow-sm rounded-3">
-                <div class="card-body p-4">
-                    <h3 class="card-title text-center mb-4 fw-bold" style="color:#f57c1f;">Register</h3>
+            <div class="card shadow-sm rounded-3 bg-orange">
+                <div class="card-body p-4" style="max-height: 70vh; overflow-y: auto;">
+                    <h3 class="card-title text-center mb-4 fw-bold text-white">Register</h3>
 
                     @if (ViewBag.Error != null)
                     {
@@ -16,36 +16,34 @@
 
                     <form method="post" asp-action="Register">
                         <div class="mb-3">
-                            <label for="fullName" class="form-label fw-semibold">Full Name</label>
-                            <input type="text" name="fullName" class="form-control rounded-2" id="fullName" placeholder="Enter full name" required />
+                            <label for="fullName" class="form-label fw-semibold text-white">Full Name</label>
+                            <input type="text" name="fullName" class="form-control rounded-2 shadow" id="fullName" placeholder="Enter full name" required />
                         </div>
                         <div class="mb-3">
-                            <label for="email" class="form-label fw-semibold">Email</label>
-                            <input type="email" name="email" class="form-control rounded-2" id="email" placeholder="Enter email" required />
+                            <label for="email" class="form-label fw-semibold text-white">Email</label>
+                            <input type="email" name="email" class="form-control rounded-2 shadow" id="email" placeholder="Enter email" required />
                         </div>
                         <div class="mb-3">
-                            <label for="number" class="form-label fw-semibold">Contact Number</label>
-                            <input type="text" name="number" class="form-control rounded-2" id="email" placeholder="Enter Contact Number" required />
+                            <label for="number" class="form-label fw-semibold text-white">Contact Number</label>
+                            <input type="text" name="number" class="form-control rounded-2 shadow" id="number" placeholder="Enter Contact Number" required />
                         </div>
                         <div class="mb-3">
-                            <label for="username" class="form-label fw-semibold">Username</label>
-                            <input type="text" name="username" class="form-control rounded-2" id="username" placeholder="Choose a username" required />
+                            <label for="username" class="form-label fw-semibold text-white">Username</label>
+                            <input type="text" name="username" class="form-control rounded-2 shadow" id="username" placeholder="Choose a username" required />
                         </div>
                         <div class="mb-3">
-                            <label for="password" class="form-label fw-semibold">Password</label>
-                            <input type="password" name="password" class="form-control rounded-2" id="password" placeholder="Enter password" required />
+                            <label for="password" class="form-label fw-semibold text-white">Password</label>
+                            <input type="password" name="password" class="form-control rounded-2 shadow" id="password" placeholder="Enter password" required />
                         </div>
-                        <div class="d-grid">
-                            <button type="submit"
-                                    class="btn fw-bold text-white rounded-2"
-                                    style="background-color:#f57c1f; padding:10px 20px;">
-                                Register
+                        <div class="d-flex justify-content-center">
+                            <button type="submit" class="btn text-orange fw-bold bg-white px-5">
+                                Login
                             </button>
                         </div>
                     </form>
 
                     <p class="mt-3 text-center">
-                        Already have an account? <a asp-action="Login" class="fw-bold" style="color:#f57c1f;">Login here</a>
+                        Already have an account? <a asp-action="Login" class="text-white" style="color:#f57c1f;">Login here</a>
                     </p>
                 </div>
             </div>
