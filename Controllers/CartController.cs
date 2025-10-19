@@ -31,11 +31,14 @@ namespace Cucina_De_Corazon.Controllers
             return Json(dates);
         }
         [HttpPost]
-        public IActionResult ConfirmOrder(DateTime? reservedDate, string instructions = "")
+        public IActionResult ConfirmOrder(DateTime? reservedDate, string instructions = "", string address)
         {
             int? sessionid = HttpContext.Session.GetInt32("User");
             if (sessionid == null || sessionid <= 0)
                 return Json(new { location = "/User/Login" });
+
+            if (string.IsNullOrEmpty(address))
+                return Json(new { success = false, message = "Please provide a valid address." });
 
             if (!reservedDate.HasValue)
                 return Json(new { success = false, message = "Please select a valid reservation date." });
@@ -53,6 +56,7 @@ namespace Cucina_De_Corazon.Controllers
             {
                 Instructions = instructions,
                 ReservedDate = reservedDate,
+                Address = address,
                 IsActive = false
             };
 

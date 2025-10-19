@@ -113,6 +113,7 @@ public partial class MyDBContext : DbContext
         {
             entity.HasKey(e => e.OrderId).HasName("PK__Orders__C3905BCFE0CAF39E");
 
+            entity.Property(e => e.Address).HasMaxLength(255);
             entity.Property(e => e.Instructions).HasMaxLength(255);
             entity.Property(e => e.IsActive).HasDefaultValue(true);
             entity.Property(e => e.ReservedDate).HasColumnType("datetime");

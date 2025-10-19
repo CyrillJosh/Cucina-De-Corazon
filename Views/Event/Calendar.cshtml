@@ -1,0 +1,84 @@
+﻿@{
+    ViewData["Title"] = "Event Calendar";
+}
+
+<style>
+    body {
+        background-color: #ffffff;
+        color: #333333;
+    }
+
+    .fc {
+        background-color: #ffffff;
+        border-radius: 15px;
+        padding: 15px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+    }
+
+    .fc-toolbar-title {
+        color: #f6c23e;
+        font-weight: 700;
+    }
+
+    .fc-button-primary {
+        background-color: #f6c23e !important;
+        border: none !important;
+        color: #000 !important;
+        font-weight: 600;
+        transition: all 0.2s ease-in-out;
+    }
+
+        /* .fc-button-primary:hover {
+            background-color: #e0ae32 !important;
+        } */
+
+    .fc-daygrid-day-number,
+    .fc-col-header-cell-cushion {
+        color: #333 !important;
+        font-weight: 500;
+    }
+/* 
+    .fc-daygrid-day:hover {
+        background-color: rgba(246, 194, 62, 0.15);
+        cursor: pointer;
+    } */
+
+    .fc-day-today {
+        background-color: rgba(246, 194, 62, 0.2) !important;
+        border: 1px solid #f6c23e !important;
+    }
+
+    .fc-event {
+        background-color: #f6c23e !important;
+        border: none !important;
+        color: #000 !important;
+        font-weight: 600;
+    }
+</style>
+
+<div class="container mt-5">
+    <h2 class="text-center fw-bold text-warning mb-4">📅 Event Calendar</h2>
+    <div id="calendar"></div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const calendarEl = document.getElementById('calendar');
+            const calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth',
+                height: 'auto',
+                events: '/Event/GetEvents',
+                headerToolbar: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: ''
+                },
+                eventDisplay: 'block',
+                eventColor: '#f6c23e',
+                eventTextColor: '#000',
+            });
+            calendar.render();
+        });
+    </script>
+}

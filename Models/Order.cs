@@ -13,6 +13,8 @@ public partial class Order
 
     public bool IsActive { get; set; }
 
+    public string? Address { get; set; }
+
     public virtual ICollection<OrderProduct> OrderProducts { get; set; } = new List<OrderProduct>();
 
     public virtual ICollection<Bill> Bills { get; set; } = new List<Bill>();

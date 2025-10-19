@@ -75,6 +75,11 @@
                 <label class="form-label">Choose Reservation Date:</label>
                 <input type="date" id="reservedDate" min="@DateTime.Now.ToString("yyyy-MM-dd")" class="form-control mb-3" />
 
+                <div class="mb-3">
+                    <label class="form-label">Event Address / Venue</label>
+                    <input type="text" id="address" name="address" class="form-control" placeholder="Enter your event location" />
+                </div>
+
                 <label class="form-label">Instructions (optional):</label>
                 <textarea id="instructions" class="form-control" rows="3"></textarea>
             </div>
@@ -160,9 +165,15 @@
             .then(dates => {
                 unavailableDates = dates.map(d => d.split('T')[0]);
                 console.log("Unavailable Dates:", unavailableDates);
+
             });
 
-        const dateInput = document.getElementById("reservedDate");
+        flatpickr("#reservedDate", {
+            minDate: "today",
+            disable: unavailableDates // array of yyyy-mm-dd strings
+            const dateInput = document.getElementById("reservedDate");
+        });
+
 
         dateInput.addEventListener("change", () => {
             const selectedDate = dateInput.value;
@@ -179,6 +190,7 @@
         document.getElementById("confirmOrderBtn").addEventListener("click", async () => {
             const reservedDate = dateInput.value;
             const instructions = document.getElementById("instructions").value;
+			const address = document.getElementById("address").value;
 
             console.log(reservedDate, instructions)
             if (!reservedDate) {
@@ -190,6 +202,7 @@
                 const formData = new FormData();
                 formData.append("reservedDate", reservedDate);
                 formData.append("instructions", instructions);
+                formData.append("address", address);
 
                 const response = await fetch("/Cart/ConfirmOrder", {
                     method: "POST",

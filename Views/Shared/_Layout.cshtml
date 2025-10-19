@@ -4,6 +4,8 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Cucina_De_Corazon</title>
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.css" rel="stylesheet">
+
 
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
@@ -27,6 +29,7 @@
                                 <a class=" text-decoration-none text-white" href="/Records">Records</a>
                                 <a class=" text-decoration-none text-white" href="/Menu">Menu</a>
                                 <a class=" text-decoration-none text-white" href="/Feedback">Comments</a>
+                                <a class=" text-decoration-none text-white" href="/Event/Calendar">Schedules</a>
                                 <a class=" text-decoration-none text-white" href="/User">UserManagement</a>
                             }else{
                                 <a class=" text-decoration-none text-white" href="#aboutus">About Us</a>
@@ -69,6 +72,8 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
+
 </body>
 </html>
