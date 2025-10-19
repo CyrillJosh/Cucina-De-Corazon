@@ -93,7 +93,7 @@
                     <input type="text" id="address" name="address" class="form-control" placeholder="Enter your event location" />
                 </div>
 
-                <label class="form-label">Instructions (optional):</label>
+                <label class="form-label">Special Request:</label>
                 <textarea id="instructions" class="form-control" rows="3"></textarea>
             </div>
             <div class="modal-footer">
@@ -174,21 +174,22 @@
         let unavailableDates = [];
 
         fetch("/Cart/GetUnavailableDates")
-        .then(res => res.json())
-        .then(dates => {
-            unavailableDates = dates.map(d => d.split('T')[0]);
-            console.log("Unavailable Dates:", unavailableDates);
+            .then(res => res.json())
+            .then(dates => {
+                unavailableDates = dates.map(d => d.split('T')[0]); // format: YYYY-MM-DD
+                console.log("Unavailable Dates:", unavailableDates);
 
-        });
-
-        flatpickr("#reservedDate", {
-        minDate: "today",
-        disable: unavailableDates,
-        dateFormat: "d/m/Y",  // e.g., 25/12/2023
-        onChange: function(selectedDates, dateStr, instance) {
-            console.log("Date selected:", dateStr);
-        }
-        });
+                // Initialize Flatpickr *after* data is ready
+                flatpickr("#reservedDate", {
+                    minDate: "today",
+                    disable: unavailableDates,
+                    dateFormat: "d/m/Y",
+                    onChange: function (selectedDates, dateStr, instance) {
+                        console.log("Date selected:", dateStr);
+                    }
+                });
+            })
+            .catch(err => console.error("Error fetching unavailable dates:", err));
 
 		const dateInput = document.getElementById("reservedDate");
          

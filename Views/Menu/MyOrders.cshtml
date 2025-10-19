@@ -50,7 +50,7 @@
                                 }
                             </tbody>
                         </table>
-                        @if (order.ReservedDate.HasValue && order.ReservedDate.Value > DateTime.Now.AddDays(2))
+                        @if (order.ReservedDate.HasValue && order.ReservedDate.Value > DateTime.Now.AddDays(2) && order.Bills.First().Status == "Pending")
                         {
                             <a asp-action="Edit" asp-controller="Order" asp-route-id="@order.OrderId"
                                 class="btn btn-sm btn-primary float-end m-2">

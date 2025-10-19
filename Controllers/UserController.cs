@@ -6,6 +6,7 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.Json;
 
 namespace Cucina_De_Corazon.Controllers
 {
@@ -165,6 +166,7 @@ namespace Cucina_De_Corazon.Controllers
         public IActionResult Logout()
         {
             HttpContext.Session.Clear();
+            HttpContext.Session.SetString("Categories", JsonSerializer.Serialize(_context.Categories.ToList()));
             return RedirectToAction("Login");
         }
     }
