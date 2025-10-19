@@ -16,12 +16,12 @@
     }
 
     .fc-toolbar-title {
-        color: #f6c23e;
+        color: #EB6A00;
         font-weight: 700;
     }
 
     .fc-button-primary {
-        background-color: #f6c23e !important;
+        background-color: #EB6A00 !important;
         border: none !important;
         color: #000 !important;
         font-weight: 600;
@@ -44,21 +44,27 @@
     } */
 
     .fc-day-today {
-        background-color: rgba(246, 194, 62, 0.2) !important;
-        border: 1px solid #f6c23e !important;
+        background-color: #EB6A00 !important;
+        border: 1px solid #EB6A00 !important;
     }
 
     .fc-event {
-        background-color: #f6c23e !important;
+        background-color: #EB6A00 !important;
         border: none !important;
         color: #000 !important;
         font-weight: 600;
     }
+
+    thead{
+        background: #EB6A00 !important;
+        margin-top: -20px;
+    }
+
 </style>
 
 <div class="container mt-5">
-    <h2 class="text-center fw-bold text-warning mb-4">📅 Event Calendar</h2>
-    <div id="calendar"></div>
+    <h2 class="text-center fw-bold text-warning mb-4 text-orange">Event Calendar</h2>
+    <div id="calendar" style="max-height: 60vh; overflow-y: auto;"></div>
 </div>
 
 @section Scripts {
@@ -68,6 +74,7 @@
             const calendar = new FullCalendar.Calendar(calendarEl, {
                 initialView: 'dayGridMonth',
                 height: 'auto',
+                contentHeight: 'auto',
                 events: '/Event/GetEvents',
                 headerToolbar: {
                     left: 'prev,next today',
@@ -75,7 +82,7 @@
                     right: ''
                 },
                 eventDisplay: 'block',
-                eventColor: '#f6c23e',
+                eventColor: '#EB6A00',
                 eventTextColor: '#000',
             });
             calendar.render();

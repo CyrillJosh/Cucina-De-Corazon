@@ -4,25 +4,25 @@
 }
 
 <div class="container mt-5 d-flex justify-content-center">
-    <div class="card shadow-sm p-4" style="max-width:500px; width:100%;">
-        <h3 class="text-center mb-4 fw-bold">Product Details</h3>
+    <div class="card shadow-sm p-4 bg-orange" style="max-width:500px; width:100%;">
+        <h3 class="text-center mb-4 fw-bold text-white">Product Details</h3>
 
-        <div class="mb-3">
+        <div class="mb-3 text-white">
             <label class="fw-bold">Name:</label>
             <p>@Model.ProductName</p>
         </div>
 
-        <div class="mb-3">
+        <div class="mb-3 text-white">
             <label class="fw-bold">Description:</label>
             <p>@Model.ProductDescription</p>
         </div>
 
-        <div class="mb-3">
+        <div class="mb-3 text-white">
             <label class="fw-bold">Price:</label>
             <p>₱@Model.ProductPrice</p>
         </div>
 
-        <div class="mb-3">
+        <div class="mb-3 text-white">
             <label class="fw-bold">Category:</label>
             <p>@Model.Category?.CategoryName</p>
         </div>
@@ -35,7 +35,7 @@
         }
 
         <div class="d-grid">
-            <a asp-action="Index" class="btn btn-warning text-white fw-bold" style="background: #f57c1f;">Back to List</a>
+            <a asp-action="Index" class="btn bg-white text-orange fw-bold" style="background: #f57c1f;">Back to List</a>
         </div>
     </div>
 </div>
