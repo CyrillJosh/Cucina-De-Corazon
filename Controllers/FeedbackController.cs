@@ -1,4 +1,5 @@
 ﻿using Cucina_De_Corazon.Context;
+using Cucina_De_Corazon.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Cucina_De_Corazon.Controllers
@@ -18,20 +19,26 @@ namespace Cucina_De_Corazon.Controllers
         }
 
         [HttpPost]
-        public IActionResult SubmitFeedback(string message)
+        public IActionResult SubmitFeedback([FromBody] FeedbackRequest request)
         {
-            if (string.IsNullOrEmpty(message))
-            {
+            if (request == null || string.IsNullOrWhiteSpace(request.Message))
                 return Json(new { success = false, message = "Feedback message cannot be empty." });
-            }
-            var feedback = new Models.Feedback
+
+            var feedback = new Feedback
             {
-                Message = message,
+                Message = request.Message,
                 SubmittedAt = DateTime.Now
             };
+
             _context.Feedbacks.Add(feedback);
             _context.SaveChanges();
+
             return Json(new { success = true, message = "Thank you for your feedback!" });
+        }
+
+        public class FeedbackRequest
+        {
+            public string Message { get; set; }
         }
     }
 }

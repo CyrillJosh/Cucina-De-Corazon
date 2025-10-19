@@ -1,5 +1,6 @@
 ﻿using Cucina_De_Corazon.Context;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Cucina_De_Corazon.Controllers
 {
@@ -25,13 +26,26 @@ namespace Cucina_De_Corazon.Controllers
                 .Where(o => o.ReservedDate != null)
                 .Select(o => new
                 {
+                    id = o.OrderId,
                     title = "Reserved",
                     start = o.ReservedDate.Value.ToString("yyyy-MM-dd"),
-                    color = "#f6c23e" // golden-yellow
+                    color = "#EB6A00"
                 })
                 .ToList();
 
             return Json(events);
+        }
+
+        public IActionResult Details(int id)
+        {
+            var det = _context.Bills
+                .Include(x => x.Person)
+                .Include(x => x.Orders)
+                .ThenInclude(x => x.OrderProducts)
+                .ThenInclude(x => x.Product)
+                .Where(b => b.BillId == id)
+                .FirstOrDefault();
+            return View(det);
         }
     }
 }

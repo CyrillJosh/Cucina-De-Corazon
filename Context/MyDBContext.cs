@@ -101,11 +101,10 @@ public partial class MyDBContext : DbContext
 
         modelBuilder.Entity<Feedback>(entity =>
         {
-            entity.HasKey(e => e.FeedbackId).HasName("PK__Feedback__6A4BEDD6DFDCF7CD");
+            entity.HasKey(e => e.FeedbackId).HasName("PK__Feedback__6A4BEDD68287BCB1");
 
             entity.ToTable("Feedback");
 
-            entity.Property(e => e.FeedbackId).ValueGeneratedNever();
             entity.Property(e => e.SubmittedAt).HasColumnType("datetime");
         });
 

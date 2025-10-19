@@ -157,19 +157,40 @@
         });
 
         $("#submitFeedbackBtn").click(() => {
-            const message = $("#feedbackComment").val(); 
+            const message = $("#feedbackComment").val().trim();
 
-            fetch(`/Feedback/SubmitFeedback?message=${encodeURIComponent(message)}`)
-                .then(res => res.json())
-                .then(data => {
-                    if (data.success) { 
-                        location.href = "/";
-                    } else {
-                        alert(data.message);
-                    }
-                })
-                .catch(err => console.error("Error submitting feedback:", err));
+            if (!message) {
+                alert("Please enter your feedback before submitting.");
+                return;
+            }
+
+            fetch("/Feedback/SubmitFeedback", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ message })
+            })
+            .then(async res => {
+                if (!res.ok) {
+                    const text = await res.text();
+                    throw new Error(`Server error: ${text}`);
+                }
+                return res.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    alert(data.message);
+                    $("#feedbackModal").modal("hide");
+                    $("#feedbackComment").val("");
+                } else {
+                    alert(data.message);
+                }
+            })
+            .catch(err => console.error("Error submitting feedback:", err));
         });
+
+
 
         let unavailableDates = [];
 

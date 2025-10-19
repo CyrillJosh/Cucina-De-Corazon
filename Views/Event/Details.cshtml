@@ -1,0 +1,88 @@
+﻿@model Cucina_De_Corazon.Models.Bill
+@{
+    ViewData["Title"] = "Bill Details";
+}
+
+<div class="container mt-5">
+    <div class="card shadow-lg border-0 rounded-4" style="background: #fff8f3; max-width: 800px; margin: 0 auto;">
+        <div class="card-header text-center fw-bold fs-4 text-white" style="background: #f57c1f;">
+            Bill Details
+        </div>
+
+        <div class="card-body p-4">
+            @if (Model != null)
+            {
+                <div class="mb-4">
+                    <h5 class="fw-bold text-orange">Bill Information</h5>
+                    <hr />
+                    <p><strong>Bill ID:</strong> @Model.BillId</p>
+                    <p><strong>Reserved date:</strong> @Model.Orders.First().ReservedDate?.ToString("MMM dd, yyyy")</p>
+                    <p><strong>Type:</strong> @Model.Orders.First().Type</p>
+                    <p><strong>Address:</strong> @Model.Orders.First().Address</p>
+                </div>
+
+                <div class="mb-4">
+                    <h5 class="fw-bold text-orange">Customer Details</h5>
+                    <hr />
+                    @if (Model.Person != null)
+                    {
+                        <p><strong>Name:</strong> @Model.Person.FullName</p>
+                        <p><strong>Email:</strong> @Model.Person.Email</p>
+                        <p><strong>Contact:</strong> @Model.Person.ContactNumber</p>
+                    }
+                    else
+                    {
+                        <p class="text-muted fst-italic">No customer data available.</p>
+                    }
+                </div>
+
+                <div class="mb-4">
+                    <h5 class="fw-bold text-orange">Orders</h5>
+                    <hr />
+                    @if (Model.Orders != null && Model.Orders.Any())
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-striped align-middle">
+                                <thead class="table-warning text-center">
+                                    <tr>
+                                        <th>Order</th>
+                                        <th>Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var order in Model.Orders.First().OrderProducts)
+                                    {
+                                        <tr>
+                                            <td>@order.Product.ProductName</td>
+                                            <td>@order.Price</td>
+                                            <td>@order.Quantity</td>
+                                            <td>@(order.Price * order.Quantity)</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <p class="text-muted fst-italic">No orders found for this bill.</p>
+                    }
+                </div>
+
+                <div class="text-center mt-4">
+                    <a asp-action="Index" class="btn btn-secondary px-4 rounded-3">Back to List</a>
+                </div>
+            }
+            else
+            {
+                <p class="text-danger fw-semibold text-center">Bill not found.</p>
+            }
+        </div>
+    </div>
+</div>
+
+<style>
+    .table thead {
+        background-color: #f6c23e;
+    }
+</style>

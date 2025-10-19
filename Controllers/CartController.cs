@@ -39,6 +39,10 @@ namespace Cucina_De_Corazon.Controllers
             if (sessionid == null|| sessionid <= 0)
                 return Json(new { location = "/User/Login" });
 
+            var person = _context.Accounts.FirstOrDefault(a => a.AccountId == sessionid);
+            if (person.Role == "Staff" || person.Role == "Admin")
+                return Json(new { success = false, message = "Admins and Staff cannot place orders." });
+
             if (!reservedDate.HasValue)
                 return Json(new { success = false, message = "Please select a valid reservation date." });
 

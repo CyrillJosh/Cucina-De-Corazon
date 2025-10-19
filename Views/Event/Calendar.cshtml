@@ -32,9 +32,11 @@
             background-color: #e0ae32 !important;
         } */
 
-    .fc-daygrid-day-number,
+    .fc-daygrid-day-number{
+            color:  #EB6A00
+    }
     .fc-col-header-cell-cushion {
-        color: #333 !important;
+        color: white;
         font-weight: 500;
     }
 /* 
@@ -46,6 +48,9 @@
     .fc-day-today {
         background-color: #EB6A00 !important;
         border: 1px solid #EB6A00 !important;
+    }
+    .fc-day-today .fc-daygrid-day-number {
+        color: #fff !important;
     }
 
     .fc-event {
@@ -60,6 +65,19 @@
         margin-top: -20px;
     }
 
+    .fc-event-title-container{
+            text-align: center;
+            color: white;
+    }
+        /* Make past days look faded */
+    .fc-daygrid-day.fc-day-past {
+        background-color: #e8e8e8 !important; /* slightly different background */
+    }
+
+    .fc-daygrid-day.fc-day-other .fc-daygrid-day-number {
+        color: #999 !important; /* muted gray number */
+        font-weight: 500;
+    }
 </style>
 
 <div class="container mt-5">
@@ -69,12 +87,11 @@
 
 @section Scripts {
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
+               document.addEventListener('DOMContentLoaded', function () {
             const calendarEl = document.getElementById('calendar');
             const calendar = new FullCalendar.Calendar(calendarEl, {
                 initialView: 'dayGridMonth',
                 height: 'auto',
-                contentHeight: 'auto',
                 events: '/Event/GetEvents',
                 headerToolbar: {
                     left: 'prev,next today',
@@ -84,7 +101,14 @@
                 eventDisplay: 'block',
                 eventColor: '#EB6A00',
                 eventTextColor: '#000',
+                eventClick: function (info) {
+                    const orderId = info.event.id;
+                    if (orderId) {
+                        window.location.href = `/Records/Details/${orderId}`; // or /Orders/Details/
+                    }
+                }
             });
+
             calendar.render();
         });
     </script>
