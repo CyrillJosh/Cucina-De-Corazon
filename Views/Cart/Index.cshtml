@@ -5,64 +5,66 @@
 }
 
 <div class="container mt-5 h-100">
-    <h2 class="mb-4 text-center fw-bold">Your Cart</h2>
+    <div class="card shadow border-0 rounded-4 p-4">
+        <h2 class="mb-4 text-center fw-bold">Your Cart</h2>
 
-    @if (Model.Count == 0)
-    {
-        <div class="alert alert-info text-center rounded-3">Your cart is empty.</div>
-    }
-    else
-    {   
-        <div class="table-responsive">
-            <table class="table table-bordered table-striped align-middle rounded-3">
-                <thead class="table-warning">
-                    <tr>
-                        <th>Product</th>
-                        <th>Pax</th>
-                        <th>Price</th>
-                        <th>Qty</th>
-                        <th>Total</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var item in Model)
-                    {
-                        <tr>
-                            <td class="fw-semibold">@item.ProductName</td>
-                            <td>@item.Pax</td>
-                            <td>₱@item.Price.ToString("N2")</td>
-                            <td>
-                                <input type="number"
-                                       class="form-control qty-input text-center"
-                                       min="1"
-                                       value="@item.Qty"
-                                       data-product-id="@item.ProductId"
-                                       style="width: 80px;" />
-                            </td>
-                            <td>₱@item.Total.ToString("N2")</td>
-                            <td>
-                                <form method="post" action="/Cart/Remove" class="d-inline remove-form">
-                                    <input type="hidden" name="productId" value="@item.ProductId" />
-                                    <button type="submit" class="btn btn-danger btn-sm fw-bold">Remove</button>
-                                </form>
-                            </td>
+        @if (Model.Count == 0)
+        {
+            <div class="alert alert-info text-center rounded-3">Your cart is empty.</div>
+        }
+        else
+        {   
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead class="bg-orange text-white" style="position: sticky; top: 0; z-index: 1; border-collapse: separate; border-spacing: 0px ;border: 1px solid black; border-radius: 5px;">
+                        <tr class="text-center text-white">
+                            <th>Product</th>
+                            <th>Pax</th>
+                            <th>Price</th>
+                            <th>Qty</th>
+                            <th>Total</th>
+                            <th>Action</th>
                         </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
-        <div class="d-flex justify-content-between mt-4">
-            <button class="btn btn-warning fw-bold rounded-2 px-4"
-                    data-bs-toggle="modal"
-                    data-bs-target="#confirmOrderModal">
-                Confirm Order
-            </button>
-            <form method="post" action="/Cart/Clear" id="clearCartForm">
-                <button type="submit" class="btn btn-danger fw-bold rounded-2 px-4">Clear Cart</button>
-            </form>
-        </div>
-    }
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td class="fw-semibold">@item.ProductName</td>
+                                <td>@item.Pax</td>
+                                <td>₱@item.Price.ToString("N2")</td>
+                                <td>
+                                    <input type="number"
+                                           class="form-control qty-input text-center"
+                                           min="1"
+                                           value="@item.Qty"
+                                           data-product-id="@item.ProductId"
+                                           style="width: 80px;" />
+                                </td>
+                                <td>₱@item.Total.ToString("N2")</td>
+                                <td>
+                                    <form method="post" action="/Cart/Remove" class="d-inline remove-form">
+                                        <input type="hidden" name="productId" value="@item.ProductId" />
+                                        <button type="submit" class="btn btn-danger btn-sm fw-bold">Remove</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <div class="d-flex justify-content-between mt-4">
+                <button class="btn btn-warning fw-bold rounded-2 px-4"
+                        data-bs-toggle="modal"
+                        data-bs-target="#confirmOrderModal">
+                    Confirm Order
+                </button>
+                <form method="post" action="/Cart/Clear" id="clearCartForm">
+                    <button type="submit" class="btn btn-danger fw-bold rounded-2 px-4">Clear Cart</button>
+                </form>
+            </div>
+        }
+    </div>
 </div>
 <div class="modal fade" id="confirmOrderModal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
@@ -73,7 +75,7 @@
             </div>
             <div class="modal-body">
                 <label class="form-label">Choose Reservation Date:</label>
-                <input type="date" id="reservedDate" min="@DateTime.Now.ToString("yyyy-MM-dd")" class="form-control mb-3" />
+                <input type="date" id="reservedDate" min="@DateTime.Now.ToString("yyyy-MM-dd")" class="form-control mb-3 bg-white" />
 
                 <div class="mb-3">
                     <label class="form-label">Event Address / Venue</label>
@@ -169,9 +171,12 @@
             });
 
         flatpickr("#reservedDate", {
-            minDate: "today",
-            disable: unavailableDates // array of yyyy-mm-dd strings
-            const dateInput = document.getElementById("reservedDate");
+        minDate: "today",
+        disable: unavailableDates,
+        dateFormat: "d/m/Y",  // e.g., 25/12/2023
+        onChange: function(selectedDates, dateStr, instance) {
+            console.log("Date selected:", dateStr);
+        }
         });
 
 

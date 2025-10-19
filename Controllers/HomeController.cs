@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Text.Json;
 using Cucina_De_Corazon.Context;
 using Cucina_De_Corazon.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -19,6 +20,7 @@ namespace Cucina_De_Corazon.Controllers
 
         public IActionResult Index()
         {
+            HttpContext.Session.SetString("Categories", JsonSerializer.Serialize(_context.Categories.ToList()));
             var cat = _context.Categories.ToList();
             return View(cat);
         }

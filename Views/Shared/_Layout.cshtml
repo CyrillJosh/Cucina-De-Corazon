@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@using System.Text.Json
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -10,6 +11,7 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Cucina_De_Corazon.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/flatpikr.css"/>
 </head>
 <body class="d-flex flex-column vh-100 vw-100 overflow-hidden" style="background: #ECE0D8">
     <header style="background: #212120">
@@ -31,8 +33,13 @@
                         <a class=" text-decoration-none text-white" href="/Feedback">Comments</a>
                         <a class=" text-decoration-none text-white" href="/Event/Calendar">Schedules</a>
                         <a class=" text-decoration-none text-white" href="/User">UserManagement</a>
-                    }else{
-                        <a class=" text-decoration-none text-white" href="#aboutus">About Us</a>
+                    }
+                    else
+                    {
+                        <a class="text-decoration-none text-white"
+                                data-bs-toggle="modal" data-bs-target="#Category">
+                            Menu
+                        </a>
                         <a class=" text-decoration-none text-white" href="#services">Our Services</a>
                         <a class=" text-decoration-none text-white" href="#booking">Book Your Event</a>
                         @if(!string.IsNullOrEmpty(sessionUser))
@@ -68,6 +75,45 @@
     <div class="flex-grow-1 overflow-y-scroll">
             @RenderBody()
     </div>
+    <div class="modal fade" id="Category" aria-labelledby="CategoryModal" aria-hidden="true" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content rounded-3">
+                <div class="modal-header text-center d-flex flex-row align-items-center">
+                    <h3 class="modal-title text-orange flex-grow-1">FOOD MENU</h3>
+                    <button type="button" class="btn-close ms-0" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body d-flex flex-column gap-3 px-3" style="max-height: 300px; overflow-y: auto;">
+                    @{
+                        var categoriesJson = Context.Session.GetString("Categories");
+                        List<Category> categories = null;
+                        if (!string.IsNullOrEmpty(categoriesJson))
+                        {
+                            categories = JsonSerializer.Deserialize<List<Category>>(categoriesJson);
+                        }
+                    }
+                    @foreach (var c in categories)
+                    {
+                        <a class="text-decoration-none text-center"
+                           style="background: #f57c1f;
+                                        color: #fff;
+                                        font-weight: bold;
+                                        padding: 10px 20px;
+                                        border-radius: 6px;
+                                        text-decoration: none;
+                                        transition: all 0.3s ease;"
+                           asp-controller="Menu"
+                           asp-action="Products"
+                           asp-route-category="@c.CategoryId" class="menu-link">
+                            @c.CategoryName
+                        </a>
+                    }
+                </div>
+                <div class="modal-footer">
+                    <a href="/Cart" class="btn btn-danger w-100" style=" padding: 10px 20px;">Go to Cart</a>
+                </div>
+            </div>
+        </div>
+    </div>
 
   @*   <footer class="border-top footer text-muted">
         <div class="container">
@@ -78,6 +124,7 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="~/js/calendar.js"></script>
+	<script src="~/js/flatpikr.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
 
 </body>

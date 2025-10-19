@@ -4,45 +4,42 @@
 }
 
 <div class="container mt-5">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2>Products</h2>
-        <a asp-action="Create" class="btn btn-warning text-white fw-bold" style="background: #f57c1f;">Add Product</a>
-    </div>
+    <div class="card shadow border-0 rounded-4 p-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="text-orange fw-bold">PRODUCTS</h2>
+            <a asp-action="Create" class="btn btn-warning text-white fw-bold" style="background: #f57c1f;">Add Product</a>
+        </div>
 
-    <table class="table table-striped table-bordered">
-        <thead class="table-warning">
-            <tr>
-                <th>Picture</th>
-                <th>Name</th>
-                <th>Description</th>
-                <th>Price</th>
-                <th>Category</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var p in Model)
-            {
-                <tr>
-                    <td>
-                        @if (p.ProductPicture != null)
-                        {
-                            <img src="~/images/@p.ProductPicture" style="height:60px; object-fit:cover;" class="rounded" />
-                        }
-                    </td>
-                    <td>@p.ProductName</td>
-                    <td>@p.ProductDescription</td>
-                    <td>₱@p.ProductPrice</td>
-                    <td>@p.Category?.CategoryName</td>
-                    <td>
-                        <a asp-action="Edit" asp-route-id="@p.ProductId" class="btn btn-sm btn-primary">Edit</a>
-                        <a asp-action="Details" asp-route-id="@p.ProductId" class="btn btn-sm btn-info text-white">Details</a>
-                        <button class="btn btn-sm btn-danger delete-btn" data-id="@p.ProductId">Delete</button>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
+        <div style="max-height: 400px; overflow-y: auto;">
+            <table class="table table-bordered">
+                <thead class="bg-orange text-white" style="position: sticky; top: 0; z-index: 1; border-collapse: separate; border-spacing: 0px ;border: 1px solid black; border-radius: 5px;">
+                    <tr>
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th>Price</th>
+                        <th>Category</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white">
+                    @foreach (var p in Model)
+                    {
+                        <tr>
+                            <td>@p.ProductName</td>
+                            <td>@p.ProductDescription</td>
+                            <td>₱@p.ProductPrice</td>
+                            <td>@p.Category?.CategoryName</td>
+                            <td>
+                                <a asp-action="Edit" asp-route-id="@p.ProductId" class="btn btn-sm btn-primary">Edit</a>
+                                <a asp-action="Details" asp-route-id="@p.ProductId" class="btn btn-sm btn-info text-white">Details</a>
+                                <button class="btn btn-sm btn-danger delete-btn" data-id="@p.ProductId">Delete</button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
 @section Scripts {
     <script>
@@ -71,4 +68,3 @@
         });
     </script>
 }
-

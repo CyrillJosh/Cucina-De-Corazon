@@ -28,7 +28,7 @@ namespace Cucina_De_Corazon.Controllers
         }
         public IActionResult Index()
         {
-            var products = _context.Products.Include(p => p.Category).Where(x => x.IsAvailable).ToList();
+            var products = _context.Products.Include(p => p.Category).Where(x => x.IsAvailable).OrderBy(x => x.CategoryId).ToList();
             return View(products);
         }
 
@@ -66,6 +66,7 @@ namespace Cucina_De_Corazon.Controllers
 
             if (ModelState.IsValid)
             {
+                product.IsAvailable = true;
                 _context.Products.Add(product);
                 _context.SaveChanges();
                 return RedirectToAction(nameof(Index));

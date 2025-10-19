@@ -10,7 +10,7 @@
             <p class="text-start fw-bold">Excellent cuisine and catering services tailored to your budget and needs.</p>
             <div class="text-center w-100 mt-4">
                 <!-- Trigger floating menu -->
-                <button class="btn btn-lg text-center" onclick="toggleFloatingMenu()"
+                <button class="btn btn-lg text-center"
                         data-bs-toggle="modal" data-bs-target="#Category"
                         style="background-color: #f57c1f; color: #fff; font-weight: bold;
                         box-shadow: 2px 4px 8px rgba(0,0,0,0.15); border-radius: 6px; padding: 12px 36px;">
@@ -28,35 +28,4 @@
 </div>
 
 
-<div class="modal fade" id="Category" aria-labelledby="CategoryModal" aria-hidden="true" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content rounded-3">
-            <div class="modal-header bg-gray">
-                <h3 class="modal-title">FOOD MENU</h3>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body d-flex flex-column gap-3 px-3" style="max-height: 300px; overflow-y: auto;">
-                @foreach (var c in Model)
-                {
-                    <a class="text-decoration-none text-center"
-                       style="background: #f57c1f;
-                                    color: #fff;
-                                    font-weight: bold;
-                                    padding: 10px 20px;
-                                    border-radius: 6px;
-                                    text-decoration: none;
-                                    transition: all 0.3s ease;"
-                       asp-controller="Menu"
-                       asp-action="Products"
-                       asp-route-category="@c.CategoryId" class="menu-link">
-                        @c.CategoryName
-                    </a>
-                }
-            </div>
-            <div class="modal-footer">
-                <a href="/Cart" class="btn btn-danger w-100">Go to Cart</a>
-            </div>
-        </div>
-    </div>
-</div>
 
