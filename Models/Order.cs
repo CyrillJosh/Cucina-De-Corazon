@@ -15,6 +15,8 @@ public partial class Order
 
     public string? Address { get; set; }
 
+    public string? Type { get; set; }
+
     public virtual ICollection<OrderProduct> OrderProducts { get; set; } = new List<OrderProduct>();
 
     public virtual ICollection<Bill> Bills { get; set; } = new List<Bill>();

@@ -17,7 +17,7 @@ namespace Cucina_De_Corazon.Controllers
             return View(feedbacks);
         }
 
-
+        [HttpPost]
         public IActionResult SubmitFeedback(string message)
         {
             if (string.IsNullOrEmpty(message))

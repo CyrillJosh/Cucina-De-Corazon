@@ -33,7 +33,7 @@ namespace Cucina_De_Corazon.Controllers
         }
         [HttpPost]
         [HttpPost]
-        public IActionResult ConfirmOrder(string address, DateTime? reservedDate = null, string instructions = "")
+        public IActionResult ConfirmOrder(string type, string address, DateTime? reservedDate = null, string instructions = "")
         {
             int? sessionid = HttpContext.Session.GetInt32("User");
             if (sessionid <= 0)
@@ -58,6 +58,7 @@ namespace Cucina_De_Corazon.Controllers
             {
                 Instructions = instructions,
                 ReservedDate = reservedDate,
+                Type = type,
                 Address = address,
                 IsActive = false
             };

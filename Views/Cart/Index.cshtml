@@ -78,6 +78,17 @@
                 <input type="date" id="reservedDate" min="@DateTime.Now.ToString("yyyy-MM-dd")" class="form-control mb-3 bg-white" />
 
                 <div class="mb-3">
+					<label class="form-label">Type</label>
+                    <select id="type">
+                        <option value="" selected disabled>Select a type of service</option>
+                        <option value="Wedding">Wedding</option>
+                        <option value="Birthday">Birthday</option>
+                        <option value="Baptism">Baptism</option>
+                        <option value="Corporate">Corporate</option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
                     <label class="form-label">Event Address / Venue</label>
                     <input type="text" id="address" name="address" class="form-control" placeholder="Enter your event location" />
                 </div>
@@ -163,12 +174,12 @@
         let unavailableDates = [];
 
         fetch("/Cart/GetUnavailableDates")
-            .then(res => res.json())
-            .then(dates => {
-                unavailableDates = dates.map(d => d.split('T')[0]);
-                console.log("Unavailable Dates:", unavailableDates);
+        .then(res => res.json())
+        .then(dates => {
+            unavailableDates = dates.map(d => d.split('T')[0]);
+            console.log("Unavailable Dates:", unavailableDates);
 
-            });
+        });
 
         flatpickr("#reservedDate", {
         minDate: "today",
@@ -179,7 +190,8 @@
         }
         });
 
-
+		const dateInput = document.getElementById("reservedDate");
+         
         dateInput.addEventListener("change", () => {
             const selectedDate = dateInput.value;
             console.log("Selected:", selectedDate);
@@ -196,10 +208,16 @@
             const reservedDate = dateInput.value;
             const instructions = document.getElementById("instructions").value;
 			const address = document.getElementById("address").value;
+            const type = document.getElementById("type").value;
 
             console.log(reservedDate, instructions)
             if (!reservedDate) {
                 alert("Please select a date.");
+                return;
+            }
+
+            if(type == ""){
+                 alert("Please select a type.");
                 return;
             }
 
@@ -208,6 +226,7 @@
                 formData.append("reservedDate", reservedDate);
                 formData.append("instructions", instructions);
                 formData.append("address", address);
+				formData.append("type", type);
 
                 const response = await fetch("/Cart/ConfirmOrder", {
                     method: "POST",

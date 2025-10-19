@@ -117,6 +117,7 @@ public partial class MyDBContext : DbContext
             entity.Property(e => e.Instructions).HasMaxLength(255);
             entity.Property(e => e.IsActive).HasDefaultValue(true);
             entity.Property(e => e.ReservedDate).HasColumnType("datetime");
+            entity.Property(e => e.Type).HasMaxLength(50);
         });
 
         modelBuilder.Entity<OrderProduct>(entity =>
