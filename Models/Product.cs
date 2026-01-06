@@ -20,6 +20,4 @@ public partial class Product
     public int? CategoryId { get; set; }
 
     public virtual Category? Category { get; set; }
-
-    public virtual ICollection<OrderProduct> OrderProducts { get; set; } = new List<OrderProduct>();
 }

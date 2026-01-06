@@ -18,15 +18,17 @@ public partial class MyDBContext : DbContext
 
     public virtual DbSet<Account> Accounts { get; set; }
 
-    public virtual DbSet<Bill> Bills { get; set; }
-
     public virtual DbSet<Category> Categories { get; set; }
+
+    public virtual DbSet<EventDetail> EventDetails { get; set; }
 
     public virtual DbSet<Feedback> Feedbacks { get; set; }
 
     public virtual DbSet<Order> Orders { get; set; }
 
     public virtual DbSet<OrderProduct> OrderProducts { get; set; }
+
+    public virtual DbSet<Payment> Payments { get; set; }
 
     public virtual DbSet<Person> People { get; set; }
 
@@ -61,42 +63,27 @@ public partial class MyDBContext : DbContext
                 .HasConstraintName("FK__Account__PersonI__09A971A2");
         });
 
-        modelBuilder.Entity<Bill>(entity =>
-        {
-            entity.HasKey(e => e.BillId).HasName("PK__Bills__11F2FC6A730BD4D5");
-
-            entity.Property(e => e.Status)
-                .HasMaxLength(50)
-                .HasDefaultValue("Pending");
-            entity.Property(e => e.Total).HasColumnType("decimal(10, 2)");
-
-            entity.HasOne(d => d.Person).WithMany(p => p.Bills)
-                .HasForeignKey(d => d.PersonId)
-                .HasConstraintName("FK_Bills_Users");
-
-            entity.HasMany(d => d.Orders).WithMany(p => p.Bills)
-                .UsingEntity<Dictionary<string, object>>(
-                    "BillOrder",
-                    r => r.HasOne<Order>().WithMany()
-                        .HasForeignKey("OrderId")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK__BillOrder__Order__2DE6D218"),
-                    l => l.HasOne<Bill>().WithMany()
-                        .HasForeignKey("BillId")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK__BillOrder__BillI__2CF2ADDF"),
-                    j =>
-                    {
-                        j.HasKey("BillId", "OrderId").HasName("PK__BillOrde__FDCBF9D627278062");
-                        j.ToTable("BillOrders");
-                    });
-        });
-
         modelBuilder.Entity<Category>(entity =>
         {
             entity.HasKey(e => e.CategoryId).HasName("PK__Categori__19093A0B392C49AF");
 
             entity.Property(e => e.CategoryName).HasMaxLength(100);
+        });
+
+        modelBuilder.Entity<EventDetail>(entity =>
+        {
+            entity.HasKey(e => e.EventId).HasName("PK__EventDet__7944C8708D7048C7");
+
+            entity.Property(e => e.EventId).HasColumnName("EventID");
+            entity.Property(e => e.EventAddress).HasMaxLength(255);
+            entity.Property(e => e.EventType).HasMaxLength(50);
+            entity.Property(e => e.OrderId).HasColumnName("OrderID");
+            entity.Property(e => e.Theme).HasMaxLength(100);
+
+            entity.HasOne(d => d.Order).WithMany(p => p.EventDetails)
+                .HasForeignKey(d => d.OrderId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_EventDetails_Orders");
         });
 
         modelBuilder.Entity<Feedback>(entity =>
@@ -110,30 +97,55 @@ public partial class MyDBContext : DbContext
 
         modelBuilder.Entity<Order>(entity =>
         {
-            entity.HasKey(e => e.OrderId).HasName("PK__Orders__C3905BCFE0CAF39E");
+            entity.HasKey(e => e.OrderId).HasName("PK__Orders__C3905BAFA2263261");
 
-            entity.Property(e => e.Address).HasMaxLength(255);
-            entity.Property(e => e.Instructions).HasMaxLength(255);
-            entity.Property(e => e.IsActive).HasDefaultValue(true);
-            entity.Property(e => e.ReservedDate).HasColumnType("datetime");
-            entity.Property(e => e.Type).HasMaxLength(50);
+            entity.Property(e => e.OrderId).HasColumnName("OrderID");
+            entity.Property(e => e.AlternateContactNumber).HasMaxLength(20);
+            entity.Property(e => e.ContactNumber).HasMaxLength(20);
+            entity.Property(e => e.CreatedBy).HasMaxLength(100);
+            entity.Property(e => e.CustomerAddress).HasMaxLength(255);
+            entity.Property(e => e.CustomerName).HasMaxLength(100);
+            entity.Property(e => e.Email).HasMaxLength(150);
+            entity.Property(e => e.OrderDate)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime");
+            entity.Property(e => e.OrderStatus).HasMaxLength(50);
+            entity.Property(e => e.TotalAmount).HasColumnType("decimal(10, 2)");
         });
 
         modelBuilder.Entity<OrderProduct>(entity =>
         {
-            entity.HasKey(e => new { e.OrderId, e.ProductId }).HasName("PK__OrderPro__08D097A34F28A247");
+            entity.HasKey(e => e.OrderProductId).HasName("PK__OrderPro__29B019E2937E6528");
 
-            entity.Property(e => e.Price).HasColumnType("decimal(18, 2)");
+            entity.Property(e => e.OrderProductId).HasColumnName("OrderProductID");
+            entity.Property(e => e.OrderId).HasColumnName("OrderID");
+            entity.Property(e => e.Price).HasColumnType("decimal(10, 2)");
+            entity.Property(e => e.ProductId).HasColumnName("ProductID");
 
             entity.HasOne(d => d.Order).WithMany(p => p.OrderProducts)
                 .HasForeignKey(d => d.OrderId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__OrderProd__Order__656C112C");
+                .HasConstraintName("FK_OrderProducts_Orders");
+        });
 
-            entity.HasOne(d => d.Product).WithMany(p => p.OrderProducts)
-                .HasForeignKey(d => d.ProductId)
+        modelBuilder.Entity<Payment>(entity =>
+        {
+            entity.HasKey(e => e.PaymentId).HasName("PK__Payments__9B556A585D2AB205");
+
+            entity.Property(e => e.PaymentId).HasColumnName("PaymentID");
+            entity.Property(e => e.OrderId).HasColumnName("OrderID");
+            entity.Property(e => e.PaymentAmount).HasColumnType("decimal(10, 2)");
+            entity.Property(e => e.PaymentDate)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime");
+            entity.Property(e => e.PaymentMethod).HasMaxLength(50);
+            entity.Property(e => e.PaymentStatus).HasMaxLength(50);
+            entity.Property(e => e.ReferenceNumber).HasMaxLength(100);
+
+            entity.HasOne(d => d.Order).WithMany(p => p.Payments)
+                .HasForeignKey(d => d.OrderId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__OrderProd__Produ__66603565");
+                .HasConstraintName("FK_Payments_Orders");
         });
 
         modelBuilder.Entity<Person>(entity =>

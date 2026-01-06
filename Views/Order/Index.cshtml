@@ -1,0 +1,240 @@
+﻿@using Cucina_De_Corazon.ViewModels
+@model OrderViewModel
+@{
+	ViewData["Title"] = "NewOrder";
+}
+<div class="container mt-5 h-100 w-100">
+	<div class="card shadow border-0 rounded-4" style="max-height:90% !important; min-height: 90%">
+		<div class="w-100 bg-orange rounded-top position-relative">
+			<h3 class="fw-bold text-white text-center m-3">New Order</h3>
+			<div class="position-absolute top-0 start-0 pt-3 p-2">
+				<div class="d-flex flex-row gap-2 text-white">
+					<h5>Step</h5>
+					<h5 id="Step">1</h5>
+					<h5>of 4</h5>
+				</div>
+			</div>
+			<div class="position-absolute top-0 end-0 pt-3 p-2">
+				<div class="d-flex flex-row gap-2 text-white">
+					<button class="btn btn-light fw-bold" id="btnBack" disabled>Back</button>
+					<button class="btn btn-light fw-bold" id="btnNext" disabled>Next</button>
+				</div>
+			</div>
+		</div>
+        @* Display PAGES *@
+        <div class="p-4" id="pages">
+
+            <!-- STEP 1 : ORDER / CUSTOMER -->
+            <div id="1">
+                <h4 class="mb-3">Customer Information</h4>
+
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Customer Name</label>
+                        <input class="form-control" name="CustomerName" required />
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label">Email</label>
+                        <input type="email" class="form-control" name="Email" />
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label">Contact Number</label>
+                        <input class="form-control" name="ContactNumber" />
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label">Alternate Contact</label>
+                        <input class="form-control" name="AlternateContactNumber" />
+                    </div>
+
+                    <div class="col-12">
+                        <label class="form-label">Address</label>
+                        <textarea class="form-control" name="CustomerAddress"></textarea>
+                    </div>
+
+                    <div class="col-12">
+                        <label class="form-label">Special Request</label>
+                        <textarea class="form-control" name="SpecialRequest"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- STEP 2 : EVENT DETAILS -->
+            <div id="2" class="visually-hidden">
+                <h4 class="mb-3">Event Details</h4>
+
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Event Type</label>
+                        <input class="form-control" name="EventType" />
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label">Theme</label>
+                        <input class="form-control" name="Theme" />
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label">Event Date</label>
+                        <input type="date" class="form-control" name="EventDate" />
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label">Event Time</label>
+                        <input type="time" class="form-control" name="EventTime" />
+                    </div>
+
+                    <div class="col-12">
+                        <label class="form-label">Event Address</label>
+                        <textarea class="form-control" name="EventAddress"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- STEP 3 : ORDER PRODUCTS -->
+            <div id="3" class="visually-hidden">
+                <h4 class="mb-1">Order Products</h4>
+
+                <div class="row">
+                    <!-- LEFT: Products -->
+                    <div class="col-8">
+                        <div style="max-height: 65vh; overflow-y: auto; overflow-x: hidden">
+                            <div class="row">
+                                @foreach (var p in Model.Products)
+                                {
+                                    <div class="col-lg-3 col-md-4">
+                                        <div class="d-flex p-1 w-100 h-100">
+                                            <div class="card food-card shadow-sm w-100 h-100">
+                                                <img src="~/images/@(p.ProductName).png"
+                                                        class="card-img-top rounded-top"
+                                                        alt="@p.ProductName"
+                                                        style="height: 100px; object-fit: cover;">
+                                                <div class="card-body text-center d-flex flex-column justify-content-between">
+                                                    <div>
+                                                        <h5 class="card-title fw-bold">@p.ProductName</h5>
+                                                    </div>
+                                                    <div>
+                                                        <p class="card-text text-dark fw-semibold">₱@p.ProductPrice</p>
+                                                        <button class="btn btn-warning w-100 order-btn"
+                                                                data-id="@p.ProductId"
+                                                                data-name="@p.ProductName"
+                                                                data-price="@p.ProductPrice">
+                                                            Add
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- RIGHT: Receipt -->
+                    <div class="col-4">
+                        <div class="card shadow-sm">
+                            <div class="card-header bg-dark text-white">
+                                <h5 class="mb-0">Order Summary</h5>
+                            </div>
+
+                            <div class="card-body p-2" id="receiptBody" style="max-height: 65vh; overflow-y: auto;">
+                                <p class="text-muted text-center" id="emptyReceipt">No items added</p>
+                            </div>
+
+                            <div class="card-footer">
+                                <div class="d-flex justify-content-between fw-bold">
+                                    <span>Total</span>
+                                    <span id="totalAmount">₱0.00</span>
+                                </div>
+                                <button class="btn btn-success w-100 mt-2">Confirm Order</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- STEP 4 : PAYMENT -->
+            <div id="4" class="visually-hidden position-relative">
+                <h4 class="mb-3">Payment</h4>
+
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Payment Method</label>
+                        <select class="form-select" name="PaymentMethod">
+                            <option>Cash</option>
+                            <option>Card</option>
+                            <option>Online</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label">Reference Number</label>
+                        <input class="form-control" name="ReferenceNumber" />
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label">Payment Amount</label>
+                        <input type="number" step="0.01" class="form-control" name="PaymentAmount" />
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label">Payment Status</label>
+                        <select class="form-select" name="PaymentStatus">
+                            <option>Pending</option>
+                            <option>Paid</option>
+                            <option>Failed</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="position-absolute end-0 bottom-0">
+                    <button>
+                        Submit
+                    </button>
+                </div>
+            </div>
+
+        </div>
+
+	</div>
+</div>
+@section Scripts {
+	<script>
+		$(document).ready(function () {
+
+			var currentPage = 1;
+			var totalPages = $("#pages").children("div").length;
+
+			updateButtons();
+
+			$("#btnNext").on("click", function () {
+				if (currentPage < totalPages) {
+					showPage(currentPage + 1);
+				}
+			});
+
+			$("#btnBack").on("click", function () {
+				if (currentPage > 1) {
+					showPage(currentPage - 1);
+				}
+			});
+
+			function showPage(pageNumber) {
+				$("#pages > div").addClass("visually-hidden");
+				$("#" + pageNumber).removeClass("visually-hidden");
+				$("#Step").text(pageNumber);
+				currentPage = pageNumber;
+				updateButtons();
+			}
+
+			function updateButtons() {
+				$("#btnBack").prop("disabled", currentPage === 1);
+				$("#btnNext").prop("disabled", currentPage === totalPages);
+			}
+
+		});
+	</script>
+
+}

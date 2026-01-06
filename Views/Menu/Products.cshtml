@@ -1,6 +1,7 @@
 ﻿@model List<Product>
 @{
-	ViewData["Title"] = Model.First().Category.CategoryName;
+    var firstProduct = Model?.FirstOrDefault();
+    ViewData["Title"] = firstProduct?.Category?.CategoryName ?? "Products";
 }
 
 <section class="container my-5 h-100">

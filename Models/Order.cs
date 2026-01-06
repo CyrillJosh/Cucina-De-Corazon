@@ -7,17 +7,29 @@ public partial class Order
 {
     public int OrderId { get; set; }
 
-    public string? Instructions { get; set; }
+    public string CustomerName { get; set; } = null!;
 
-    public DateTime? ReservedDate { get; set; }
+    public string? Email { get; set; }
 
-    public bool IsActive { get; set; }
+    public string? CustomerAddress { get; set; }
 
-    public string? Address { get; set; }
+    public string? ContactNumber { get; set; }
 
-    public string? Type { get; set; }
+    public string? AlternateContactNumber { get; set; }
+
+    public DateTime OrderDate { get; set; }
+
+    public string? OrderStatus { get; set; }
+
+    public decimal? TotalAmount { get; set; }
+
+    public string? CreatedBy { get; set; }
+
+    public string? SpecialRequest { get; set; }
+
+    public virtual ICollection<EventDetail> EventDetails { get; set; } = new List<EventDetail>();
 
     public virtual ICollection<OrderProduct> OrderProducts { get; set; } = new List<OrderProduct>();
 
-    public virtual ICollection<Bill> Bills { get; set; } = new List<Bill>();
+    public virtual ICollection<Payment> Payments { get; set; } = new List<Payment>();
 }

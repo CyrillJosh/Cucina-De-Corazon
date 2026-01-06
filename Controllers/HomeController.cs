@@ -21,8 +21,7 @@ namespace Cucina_De_Corazon.Controllers
         public IActionResult Index()
         {
             HttpContext.Session.SetString("Categories", JsonSerializer.Serialize(_context.Categories.ToList()));
-            var cat = _context.Categories.ToList();
-            return View(cat);
+            return RedirectToAction("Login", "User");
         }
 
         public IActionResult Privacy()

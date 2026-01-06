@@ -51,7 +51,7 @@ namespace Cucina_De_Corazon
 
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}");
+pattern: "{controller=Home}/{action=Index}/{id?}");
 
             app.Run();
         }

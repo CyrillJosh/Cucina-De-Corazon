@@ -22,13 +22,12 @@ namespace Cucina_De_Corazon.Controllers
         [HttpGet]
         public IActionResult GetEvents()
         {
-            var events = _context.Orders
-                .Where(o => o.ReservedDate != null)
+            var events = _context.EventDetails
                 .Select(o => new
                 {
                     id = o.OrderId,
                     title = "Reserved",
-                    start = o.ReservedDate.Value.ToString("yyyy-MM-dd"),
+                    start = o.EventDate.ToString("yyyy-MM-dd"),
                     color = "#EB6A00"
                 })
                 .ToList();
@@ -38,12 +37,10 @@ namespace Cucina_De_Corazon.Controllers
 
         public IActionResult Details(int id)
         {
-            var det = _context.Bills
-                .Include(x => x.Person)
-                .Include(x => x.Orders)
-                .ThenInclude(x => x.OrderProducts)
-                .ThenInclude(x => x.Product)
-                .Where(b => b.BillId == id)
+            var det = _context.Orders
+                .Include(o => o.EventDetails)
+                .Include(o => o.OrderProducts)
+                .Include(o => o.Payments)
                 .FirstOrDefault();
             return View(det);
         }

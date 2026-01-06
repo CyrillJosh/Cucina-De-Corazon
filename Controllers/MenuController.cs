@@ -15,12 +15,6 @@ namespace Cucina_De_Corazon.Controllers
             _context = context;
         }
 
-        public IActionResult MyOrders()
-        {
-            var userid = HttpContext.Session.GetInt32("User");
-            var orders = _context.Bills.Include(x => x.Orders).ThenInclude(o => o.OrderProducts).ThenInclude(op => op.Product).Where(x => x.PersonId == userid).ToList();
-            return View(orders);
-        }
         public IActionResult Products(int category)
         {
             var prods = _context.Products.Include(x => x.Category).Where(x => x.CategoryId == category && x.IsAvailable).ToList();
