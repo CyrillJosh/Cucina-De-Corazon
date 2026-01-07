@@ -42,20 +42,11 @@ namespace Cucina_De_Corazon.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create([Bind("ProductName,ProductDescription,ProductPicture,CategoryId")] Product product, decimal MinPrice, decimal MaxPrice)
+        public IActionResult Create([Bind("ProductName,ProductDescription,ProductPicture,CategoryId")] Product product)
         {
-            if (MinPrice < 0 || MaxPrice < 0)
+            if (Convert.ToInt32(product.ProductPrice) < 0)
             {
                 ModelState.AddModelError("ProductPrice", "Price cannot be negative.");
-            }
-            if (MaxPrice < MinPrice)
-            {
-                ModelState.AddModelError("", "10 pax price cannot be less than 5 pax price.");
-            }
-            else
-            {
-                // Combine MinPrice and MaxPrice into a single string
-                product.ProductPrice = $"{MinPrice}-{MaxPrice}";
             }
 
             if (ModelState.IsValid)
@@ -73,20 +64,6 @@ namespace Cucina_De_Corazon.Controllers
             var product = _context.Products.Find(id);
             if (product == null) return NotFound();
 
-            // Parse existing price
-            decimal minPrice = 0, maxPrice = 0;
-            if (!string.IsNullOrEmpty(product.ProductPrice))
-            {
-                var prices = product.ProductPrice.Split('-');
-                if (prices.Length == 2)
-                {
-                    decimal.TryParse(prices[0].Trim(), out minPrice);
-                    decimal.TryParse(prices[1].Trim(), out maxPrice);
-                }
-            }
-
-            ViewBag.MinPrice = minPrice;
-            ViewBag.MaxPrice = maxPrice;
             ViewBag.Categories = new SelectList(_context.Categories, "CategoryId", "CategoryName", product.CategoryId);
 
             return View(product);
@@ -106,9 +83,6 @@ namespace Cucina_De_Corazon.Controllers
 
             if (ModelState.IsValid)
             {
-                // Format price
-                product.ProductPrice = $"{MinPrice:0.00} - {MaxPrice:0.00}";
-
                 _context.Update(product);
                 _context.SaveChanges();
                 return RedirectToAction(nameof(Index));

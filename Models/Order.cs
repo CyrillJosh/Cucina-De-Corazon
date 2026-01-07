@@ -27,9 +27,9 @@ public partial class Order
 
     public string? SpecialRequest { get; set; }
 
-    public virtual ICollection<EventDetail> EventDetails { get; set; } = new List<EventDetail>();
+    public virtual EventDetail EventDetails { get; set; } 
 
-    public virtual ICollection<OrderProduct> OrderProducts { get; set; } = new List<OrderProduct>();
+    public virtual IEnumerable<OrderProduct> OrderProducts { get; set; } 
 
-    public virtual ICollection<Payment> Payments { get; set; } = new List<Payment>();
+    public virtual Payment Payments { get; set; } 
 }

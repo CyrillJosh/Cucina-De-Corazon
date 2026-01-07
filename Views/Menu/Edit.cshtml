@@ -22,13 +22,8 @@
 
             <div class="mb-3">
                 <label class="form-label fw-semibold text-white">Price</label>
-                <div class="d-flex gap-2">
-                    <input type="number" step="1" min="0" name="MinPrice" class="form-control rounded-2"
-                           placeholder="0.00 (5 pax)" value="@ViewBag.MinPrice" required />
-                    <span class="align-self-center fw-bold text-white">-</span>
-                    <input type="number" step="1" min="0" name="MaxPrice" class="form-control rounded-2"
-                           placeholder="0.00 (10 pax)" value="@ViewBag.MaxPrice" required />
-                </div>
+                <input asp-for="ProductPrice" class="form-control rounded-2" />
+
             </div>
 
             <div class="mb-3">

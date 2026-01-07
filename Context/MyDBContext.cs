@@ -22,8 +22,6 @@ public partial class MyDBContext : DbContext
 
     public virtual DbSet<EventDetail> EventDetails { get; set; }
 
-    public virtual DbSet<Feedback> Feedbacks { get; set; }
-
     public virtual DbSet<Order> Orders { get; set; }
 
     public virtual DbSet<OrderProduct> OrderProducts { get; set; }
@@ -80,19 +78,9 @@ public partial class MyDBContext : DbContext
             entity.Property(e => e.OrderId).HasColumnName("OrderID");
             entity.Property(e => e.Theme).HasMaxLength(100);
 
-            entity.HasOne(d => d.Order).WithMany(p => p.EventDetails)
-                .HasForeignKey(d => d.OrderId)
+            entity.HasOne(d => d.Order).WithOne(p => p.EventDetails)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_EventDetails_Orders");
-        });
-
-        modelBuilder.Entity<Feedback>(entity =>
-        {
-            entity.HasKey(e => e.FeedbackId).HasName("PK__Feedback__6A4BEDD68287BCB1");
-
-            entity.ToTable("Feedback");
-
-            entity.Property(e => e.SubmittedAt).HasColumnType("datetime");
         });
 
         modelBuilder.Entity<Order>(entity =>
@@ -119,7 +107,6 @@ public partial class MyDBContext : DbContext
 
             entity.Property(e => e.OrderProductId).HasColumnName("OrderProductID");
             entity.Property(e => e.OrderId).HasColumnName("OrderID");
-            entity.Property(e => e.Price).HasColumnType("decimal(10, 2)");
             entity.Property(e => e.ProductId).HasColumnName("ProductID");
 
             entity.HasOne(d => d.Order).WithMany(p => p.OrderProducts)
@@ -142,8 +129,7 @@ public partial class MyDBContext : DbContext
             entity.Property(e => e.PaymentStatus).HasMaxLength(50);
             entity.Property(e => e.ReferenceNumber).HasMaxLength(100);
 
-            entity.HasOne(d => d.Order).WithMany(p => p.Payments)
-                .HasForeignKey(d => d.OrderId)
+            entity.HasOne(d => d.Order).WithOne(p => p.Payments)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Payments_Orders");
         });
