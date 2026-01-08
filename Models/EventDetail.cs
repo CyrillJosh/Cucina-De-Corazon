@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using System;
 using System.Collections.Generic;
 
 namespace Cucina_De_Corazon.Models;
@@ -18,6 +19,6 @@ public partial class EventDetail
     public string? EventAddress { get; set; }
 
     public string? Theme { get; set; }
-
+    [ValidateNever]
     public virtual Order Order { get; set; } = null!;
 }

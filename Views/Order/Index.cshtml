@@ -10,8 +10,7 @@
             @TempData["Message"]
         </div>
     }
-    <form asp-action="AddOrder" asp-controller="Order" method="post" class="h-100 w-100">
-	    <div class="card shadow border-0 rounded-4" style="max-height:90% !important; min-height: 90%">
+	<div class="card shadow border-0 rounded-4" style="max-height:90% !important; min-height: 90%">
 		<div class="w-100 bg-orange rounded-top position-relative">
 			<h3 class="fw-bold text-white text-center m-3">New Order</h3>
 			<div class="position-absolute top-0 start-0 pt-3 p-2">
@@ -29,188 +28,189 @@
 			</div>
 		</div>
         @* Display PAGES *@
-        <div class="p-4 h-100 w-100" id="pages">
+        <form asp-action="AddOrder" asp-controller="Order" method="post" class="h-100 w-100">
+            <div class="p-4 h-100 w-100" id="pages">
+                <!-- STEP 1 : ORDER / CUSTOMER -->
+                <div id="1" class=" h-100 w-100">
+                    <h4 class="mb-3">Customer Information</h4>
 
-            <!-- STEP 1 : ORDER / CUSTOMER -->
-            <div id="1" class=" h-100 w-100">
-                <h4 class="mb-3">Customer Information</h4>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Customer Name</label>
+                            <input class="form-control" asp-for="Order.CustomerName" required />
+                        </div>
 
-                <div class="row g-3">
-                    <div class="col-md-6">
-                        <label class="form-label">Customer Name</label>
-                        <input class="form-control" asp-for="Order.CustomerName" required />
-                    </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Email</label>
+                            <input type="email" class="form-control" asp-for="Order.Email"/>
+                        </div>
 
-                    <div class="col-md-6">
-                        <label class="form-label">Email</label>
-                        <input type="email" class="form-control" asp-for="Order.Email"/>
-                    </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Contact Number</label>
+                            <input class="form-control" asp-for="Order.ContactNumber" />
+                        </div>
 
-                    <div class="col-md-6">
-                        <label class="form-label">Contact Number</label>
-                        <input class="form-control" asp-for="Order.ContactNumber" />
-                    </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Alternate Contact</label>
+                            <input class="form-control" asp-for="Order.AlternateContactNumber" />
+                        </div>
 
-                    <div class="col-md-6">
-                        <label class="form-label">Alternate Contact</label>
-                        <input class="form-control" asp-for="Order.AlternateContactNumber" />
-                    </div>
+                        <div class="col-12">
+                            <label class="form-label">Address</label>
+                            <textarea class="form-control" asp-for="Order.CustomerAddress"></textarea>
+                        </div>
 
-                    <div class="col-12">
-                        <label class="form-label">Address</label>
-                        <textarea class="form-control" asp-for="Order.CustomerAddress"></textarea>
-                    </div>
-
-                    <div class="col-12">
-                        <label class="form-label">Special Request</label>
-                        <textarea class="form-control" asp-for="Order.SpecialRequest"></textarea>
-                    </div>
-                </div>
-            </div>
-
-            <!-- STEP 2 : EVENT DETAILS -->
-            <div id="2" class="visually-hidden h-100 w-100">
-                <h4 class="mb-3">Event Details</h4>
-
-                <div class="row g-3">
-                    <div class="col-md-6">
-                        <label class="form-label">Event Type</label>
-                        <input class="form-control" asp-for="Order.EventDetails.EventType"/>
-                    </div>
-
-                    <div class="col-md-6">
-                        <label class="form-label">Theme</label>
-                        <input class="form-control" asp-for="Order.EventDetails.Theme" />
-                    </div>
-
-                    <div class="col-md-6">
-                        <label class="form-label">Event Date</label>
-                        <input type="date" class="form-control" asp-for="Order.EventDetails.EventDate" />
-                    </div>
-
-                    <div class="col-md-6">
-                        <label class="form-label">Event Time</label>
-                        <input type="time" class="form-control" asp-for="Order.EventDetails.EventTime" />
-                    </div>
-
-                    <div class="col-12">
-                        <label class="form-label">Event Address</label>
-                        <textarea class="form-control" asp-for="Order.EventDetails.EventAddress"></textarea>
+                        <div class="col-12">
+                            <label class="form-label">Special Request</label>
+                            <textarea class="form-control" asp-for="Order.SpecialRequest"></textarea>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- STEP 3 : ORDER PRODUCTS -->
-            <div id="3" class="visually-hidden h-100 w-100">
-                <h4 class="mb-1">Order Products</h4>
+                <!-- STEP 2 : EVENT DETAILS -->
+                <div id="2" class="visually-hidden h-100 w-100">
+                    <h4 class="mb-3">Event Details</h4>
 
-                <div class="row">
-                    <!-- LEFT: Products -->
-                    <div class="col-8">
-                        <div style="max-height: 65vh; overflow-y: auto; overflow-x: hidden">
-                            <div class="row">
-                                @foreach (var p in Model.Products)
-                                {
-                                    <div class="col-lg-3 col-md-4">
-                                        <div class="d-flex p-1 w-100 h-100">
-                                            <div class="card food-card shadow-sm w-100 h-100">
-                                                <img src="~/images/@(p.ProductName).png"
-                                                        class="card-img-top rounded-top"
-                                                        alt="@p.ProductName"
-                                                        style="height: 100px; object-fit: cover;">
-                                                <div class="card-body text-center d-flex flex-column justify-content-between">
-                                                    <div>
-                                                        <h5 class="card-title fw-bold">@p.ProductName</h5>
-                                                    </div>
-                                                    <div>
-                                                        <p class="card-text text-dark fw-semibold">₱@p.ProductPrice</p>
-                                                        <button type="button"
-                                                                class="btn btn-warning w-100 order-btn"
-                                                                data-id="@p.ProductId"
-                                                                data-name="@p.ProductName"
-                                                                data-price="@p.ProductPrice">
-                                                            Add
-                                                        </button>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Event Type</label>
+                            <input class="form-control" asp-for="Order.EventDetails.EventType"/>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Theme</label>
+                            <input class="form-control" asp-for="Order.EventDetails.Theme" />
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Event Date</label>
+                            <input type="date" class="form-control" asp-for="Order.EventDetails.EventDate" />
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Event Time</label>
+                            <input type="time" class="form-control" asp-for="Order.EventDetails.EventTime" />
+                        </div>
+
+                        <div class="col-12">
+                            <label class="form-label">Event Address</label>
+                            <textarea class="form-control" asp-for="Order.EventDetails.EventAddress"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- STEP 3 : ORDER PRODUCTS -->
+                <div id="3" class="visually-hidden h-100 w-100">
+                    <h4 class="mb-1">Order Products     -    By 5pax</h4>
+
+                    <div class="row">
+                        <!-- LEFT: Products -->
+                        <div class="col-8">
+                            <div style="max-height: 65vh; overflow-y: auto; overflow-x: hidden">
+                                <div class="row">
+                                    @foreach (var p in Model.Products)
+                                    {
+                                        <div class="col-lg-3 col-md-4">
+                                            <div class="d-flex p-1 w-100 h-100">
+                                                <div class="card food-card shadow-sm w-100 h-100">
+                                                    <img src="~/images/@(p.ProductName).png"
+                                                            class="card-img-top rounded-top"
+                                                            alt="@p.ProductName"
+                                                            style="height: 100px; object-fit: cover;">
+                                                    <div class="card-body text-center d-flex flex-column justify-content-between">
+                                                        <div>
+                                                            <h5 class="card-title fw-bold">@p.ProductName</h5>
+                                                        </div>
+                                                        <div>
+                                                            <p class="card-text text-dark fw-semibold">₱@p.ProductPrice</p>
+                                                            <button type="button"
+                                                                    class="btn btn-warning w-100 order-btn"
+                                                                    data-id="@p.ProductId"
+                                                                    data-name="@p.ProductName"
+                                                                    data-price="@p.ProductPrice">
+                                                                Add
+                                                            </button>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                }
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- RIGHT: Receipt -->
-                    <div class="col-4">
-                        <div class="card shadow-sm">
-                            <div class="card-header bg-dark text-white">
-                                <h5 class="mb-0">Order Summary</h5>
-                            </div>
-
-                            <div class="card-body p-2" id="receiptBody" style="max-height: 65vh; overflow-y: auto;">
-                                <p class="text-muted text-center" id="emptyReceipt">No items added</p>
-                            </div>
-                            <!-- Hidden inputs go here -->
-                            <div id="orderItemsInputs">
-
-                            </div>
-                            <div class="card-footer">
-                                <div class="d-flex justify-content-between fw-bold">
-                                    <span>Total</span>
-                                    <span id="totalAmount">₱0.00</span>
+                                    }
                                 </div>
-                                <button class="btn btn-success w-100 mt-2">Confirm Order</button>
+                            </div>
+                        </div>
+
+                        <!-- RIGHT: Receipt -->
+                        <div class="col-4">
+                            <div class="card shadow-sm">
+                                <div class="card-header bg-dark text-white">
+                                    <h5 class="mb-0">Order Summary</h5>
+                                </div>
+
+                                <div class="card-body p-2" id="receiptBody" style="max-height: 65vh; overflow-y: auto;">
+                                    <p class="text-muted text-center" id="emptyReceipt">No items added</p>
+                                </div>
+                                <!-- Hidden inputs go here -->
+                                <div id="orderItemsInputs">
+
+                                </div>
+                                <div class="card-footer">
+                                    <div class="d-flex justify-content-between fw-bold">
+                                        <span>Total</span>
+                                        <span id="totalAmount">₱0.00</span>
+                                    </div>
+                                    <button class="btn btn-success w-100 mt-2" type="button" id="ResetOrder">Reset Items</button>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- STEP 4 : PAYMENT -->
-            <div id="4" class="visually-hidden position-relative h-100 w-100">
-                <h4 class="mb-3">Payment</h4>
+                <!-- STEP 4 : PAYMENT -->
+                <div id="4" class="visually-hidden h-100 w-100">
+                    <div class="m-0 p-0 position-relative">
+                        <h4 class="mb-3">Payment</h4>
 
-                <div class="row g-3">
-                    <div class="col-md-6">
-                        <label class="form-label">Payment Method</label>
-                        <select class="form-select" asp-for="Order.Payments.PaymentMethod">
-                            <option>Cash</option>
-                            <option>Card</option>
-                            <option>Online</option>
-                        </select>
-                    </div>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Payment Method</label>
+                                <select class="form-select" asp-for="Order.Payments.PaymentMethod">
+                                    <option>Cash</option>
+                                    <option>Card</option>
+                                    <option>Online</option>
+                                </select>
+                            </div>
 
-                    <div class="col-md-6">
-                        <label class="form-label">Reference Number</label>
-                        <input class="form-control" asp-for="Order.Payments.ReferenceNumber"/>
-                    </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Reference Number</label>
+                                <input class="form-control" asp-for="Order.Payments.ReferenceNumber"/>
+                            </div>
 
-                    <div class="col-md-6">
-                        <label class="form-label">Payment Amount</label>
-                        <input type="number" step="0.01" class="form-control" asp-for="Order.Payments.PaymentAmount" />
-                    </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Payment Amount</label>
+                                <input type="number" step="0.01" class="form-control" asp-for="Order.Payments.PaymentAmount" id="PaymentAmount" />
+                            </div>
 
-                    <div class="col-md-6">
-                        <label class="form-label">Payment Status</label>
-                        <select class="form-select" asp-for="Order.Payments.PaymentStatus">
-                            <option>Pending</option>
-                            <option>Paid</option>
-                            <option>Failed</option>
-                        </select>
+                            <div class="col-md-6">
+                                <label class="form-label">Payment Status</label>
+                                <select class="form-select" asp-for="Order.Payments.PaymentStatus">
+                                    <option>Pending</option>
+                                    <option>Paid</option>
+                                    <option>Failed</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="position-absolute end-0 bottom-0">
+                            <button type="submit" class="btn btn-success w-100 mt-2">
+                                Confirm Order
+                            </button>
+                        </div>
                     </div>
                 </div>
-                <div class="position-absolute end-0 bottom-0">
-                    <button type="submit" class="btn btn-success w-100 mt-2">
-                        Confirm Order
-                    </button>
-                </div>
             </div>
-
-        </div>
+        </form>
 
 	</div>
-    </form>
 
 </div>
 @section Scripts {
@@ -248,8 +248,20 @@
 			}
 
 		});
-                let orderItems = {};
+
+        let orderItems = {};
         let index = 0;
+        $("#ResetOrder").on("click", function() {
+            if (confirm("Are you sure you want to reset the order?")) {
+                orderItems = {};
+                index = 0;
+                $("#receiptBody").empty();
+                $("#receiptBody").html('<p class="text-muted text-center" id="emptyReceipt">No items added</p>');
+                $("#orderItemsInputs").empty();
+                $("#totalAmount").text("₱0.00");
+            }
+        });
+
 
         $(".order-btn").on("click", function () {
             const id = $(this).data("id");
@@ -279,7 +291,6 @@
                     <input type="hidden" name="OrderItems[${index}].Quantity" id="input-qty-${id}" value="1" />
                     <input type="hidden" name="OrderItems[${index}].Price" value="${price}" />
                 `);
-
                 index++;
             }
 
@@ -293,6 +304,7 @@
                 total += orderItems[key].qty * orderItems[key].price;
             }
             $("#totalAmount").text("₱" + total.toFixed(2));
+            $("#PaymentAmount").val("₱" + total.toFixed(2));
         }
 
 	</script>

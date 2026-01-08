@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using System;
 using System.Collections.Generic;
 
 namespace Cucina_De_Corazon.Models;
@@ -27,8 +29,8 @@ public partial class Order
 
     public string? SpecialRequest { get; set; }
 
-    public virtual EventDetail EventDetails { get; set; } 
-
+    public virtual EventDetail EventDetails { get; set; }
+    [ValidateNever]
     public virtual IEnumerable<OrderProduct> OrderProducts { get; set; } 
 
     public virtual Payment Payments { get; set; } 

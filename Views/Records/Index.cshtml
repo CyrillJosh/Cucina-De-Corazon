@@ -1,4 +1,5 @@
-﻿@* @model List<Order>
+﻿@using Cucina_De_Corazon.ViewModels
+@model Records
 @{
     ViewData["Title"] = "Bills";
 }
@@ -7,7 +8,7 @@
     <div class="card shadow border-0 rounded-4 p-4">
     <h2 class="text-center mb-4 fw-bold">Records</h2>
 
-    @if (!Model.Any())
+    @if (!Model.Orders.Any())
     {
         <div class="alert alert-info text-center rounded-3">No Records found.</div>
     }
@@ -20,20 +21,28 @@
                         <th>Date</th>
                         <th>Ordered by</th>
                         <th>Total</th>
+                        <th>Address</th>
                         <th>Status</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var bill in Model)
+                    @foreach (var o in Model.Orders)
                     {
                         <tr>
-                            <td class="fw-semibold">@bill.Orders.First().ReservedDate.Value.ToString("yyyy-MM-dd")</td>
-                            <td>@bill.Person.FullName</td>
-                            <td>₱@bill.Total.ToString("N2")</td>
-                            <td>@bill.Status</td>
+                            <td class="fw-semibold">@o.EventDetails.EventDate.ToString("yyyy-MM-dd")</td>
+                            <td>@o.CustomerName</td>
+                            <td>@o.CustomerAddress</td>
+                                <td>
+                                    ₱@(
+                                    o.OrderProducts.Sum(x =>
+                                    x.Quantity * Convert.ToInt32(Model.Products.First(y => y.ProductId == x.ProductId).ProductPrice)
+                                    ).ToString("N2")
+                                                        )
+                        </td>
+                        <td>@o.Payments.PaymentStatus</td>
                             <td>
-                                <a asp-action="Details" asp-route-id="@bill.BillId"
+                                <a asp-action="Details" asp-route-id="@o.OrderId"
                                    class="btn btn-warning btn-sm text-white fw-bold">
                                     View Details
                                 </a>
@@ -46,4 +55,3 @@
     }
     </div>
 </div>
- *@

@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using System;
 using System.Collections.Generic;
 
 namespace Cucina_De_Corazon.Models;
@@ -19,5 +21,6 @@ public partial class Payment
 
     public string? PaymentStatus { get; set; }
 
+    [ValidateNever]
     public virtual Order Order { get; set; } = null!;
 }

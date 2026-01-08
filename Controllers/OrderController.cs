@@ -35,18 +35,14 @@ namespace Cucina_De_Corazon.Controllers
             }
 
 
-            _context.Orders.Add(ovm.Order);
-            _context.SaveChanges();
 
-            foreach (var item in ovm.OrderItems)
+            ovm.Order.OrderProducts = ovm.OrderItems.Select(i => new OrderProduct
             {
-                _context.OrderProducts.Add(new OrderProduct()
-                {
-                    ProductId = item.ProductId,
-                    Quantity = item.Quantity,
-                });
-            }
+                ProductId = i.ProductId,
+                Quantity = i.Quantity
+            }).ToList();
 
+            _context.Orders.Add(ovm.Order);
             _context.SaveChanges();
 
             TempData["Message"] = "Successfully Added";
