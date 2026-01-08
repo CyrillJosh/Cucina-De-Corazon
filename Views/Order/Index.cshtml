@@ -176,8 +176,9 @@
                                 <label class="form-label">Payment Method</label>
                                 <select class="form-select" asp-for="Order.Payments.PaymentMethod">
                                     <option>Cash</option>
-                                    <option>Card</option>
-                                    <option>Online</option>
+                                    <option>Bank Transfer</option>
+                                    <option>Paymaya</option>
+                                    <option>Gcash</option>
                                 </select>
                             </div>
 
@@ -196,7 +197,6 @@
                                 <select class="form-select" asp-for="Order.Payments.PaymentStatus">
                                     <option>Pending</option>
                                     <option>Paid</option>
-                                    <option>Failed</option>
                                 </select>
                             </div>
                         </div>
