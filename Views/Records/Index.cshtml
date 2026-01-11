@@ -24,6 +24,7 @@
                         <th>Total</th>
                         <th>Balance</th>
                         <th>Amount</th>
+                        <th>Reference Number</th>
                         <th>Status</th>
                         <th>Actions</th>
                         
@@ -52,6 +53,7 @@
                         <td>
                             @o.Payments.PaymentAmount
                         </td>
+                        <td>@(o.Payments.PaymentMethod == "Cash" ? "Cash" : o.Payments.ReferenceNumber??"-")</td>
                         <td>@o.Payments.PaymentStatus</td>
                             <td>
                                 <a asp-action="Details" asp-route-id="@o.OrderId"

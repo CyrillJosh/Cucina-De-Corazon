@@ -20,7 +20,7 @@ namespace Cucina_De_Corazon.Controllers
         {
             ovm.Order ??= new Order();
             ovm.OrderItems ??= new List<OrderItem>();
-            ovm.Products = _context.Products.ToList();
+            ovm.Products = _context.Products.Include(x => x.Category).OrderBy(x => x.CategoryId).ToList();
             return View(ovm);
         }
 

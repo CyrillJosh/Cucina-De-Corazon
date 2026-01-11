@@ -31,7 +31,7 @@
         <form asp-action="AddOrder" asp-controller="Order" method="post" class="h-100 w-100">
             <div class="p-4 h-100 w-100" id="pages">
                 <!-- STEP 1 : ORDER / CUSTOMER -->
-                <div id="1" class=" h-100 w-100">
+                <div id="step-1" class=" h-100 w-100">
                     <h4 class="mb-3">Customer Information</h4>
 
                     <div class="row g-3">
@@ -68,7 +68,7 @@
                 </div>
 
                 <!-- STEP 2 : EVENT DETAILS -->
-                <div id="2" class="visually-hidden h-100 w-100">
+                <div id="step-2" class="visually-hidden h-100 w-100">
                     <h4 class="mb-3">Event Details</h4>
 
                     <div class="row g-3">
@@ -100,42 +100,64 @@
                 </div>
 
                 <!-- STEP 3 : ORDER PRODUCTS -->
-                <div id="3" class="visually-hidden h-100 w-100">
+                <div id="step-3" class="visually-hidden h-100 w-100">
                     <h4 class="mb-1">Order Products     -    By 5pax</h4>
 
                     <div class="row">
                         <!-- LEFT: Products -->
-                        <div class="col-8">
+                        <div class="col-8 ps-1">
                             <div style="max-height: 65vh; overflow-y: auto; overflow-x: hidden">
-                                <div class="row">
-                                    @foreach (var p in Model.Products)
+                                <div class="">
+                                    @{
+                                        var category = Model.Products.Select(x => x.Category).Distinct();
+										int count = 1;
+                                    }
+                                    <ul class="nav nav-tabs w-100" id="info">
+                                    @foreach (var c in category)
                                     {
-                                        <div class="col-lg-3 col-md-4">
-                                            <div class="d-flex p-1 w-100 h-100">
-                                                <div class="card food-card shadow-sm w-100 h-100">
-                                                    <img src="~/images/@(p.ProductName).png"
-                                                            class="card-img-top rounded-top"
-                                                            alt="@p.ProductName"
-                                                            style="height: 100px; object-fit: cover;">
-                                                    <div class="card-body text-center d-flex flex-column justify-content-between">
-                                                        <div>
-                                                            <h5 class="card-title fw-bold">@p.ProductName</h5>
-                                                        </div>
-                                                        <div>
-                                                            <p class="card-text text-dark fw-semibold">₱@p.ProductPrice</p>
-                                                            <button type="button"
-                                                                    class="btn btn-warning w-100 order-btn"
-                                                                    data-id="@p.ProductId"
-                                                                    data-name="@p.ProductName"
-                                                                    data-price="@p.ProductPrice">
-                                                                Add
-                                                            </button>
+                                            <li class="nav-item">
+                                                <a class="nav-link text-black @(count==1?"active": "")" aria-current="page" id="@(count++)">@c.CategoryName</a>
+                                            </li>
+                                    }
+                                    </ul>
+									@{
+                                        count= 1;
+                                    }
+                                    <div id="content" class="p-2">
+                                        @foreach (var c in category)
+                                        {
+                                            <div class="h-100 w-100 d-flex flex-wrap @(count == 1 ? "" : "visually-hidden")" id="@(count++)">
+                                                @foreach (var p in Model.Products.Where(x => x.CategoryId == c.CategoryId))
+                                                {
+                                                    <div class="col-lg-3 col-md-4">
+                                                        <div class="d-flex p-1 w-100 h-100">
+                                                            <div class="card food-card shadow-sm w-100 h-100">
+                                                                <img src="~/images/@(p.ProductName).png"
+                                                                     class="card-img-top rounded-top"
+                                                                     alt="@p.ProductName"
+                                                                     style="height: 100px; object-fit: cover;">
+                                                                <div class="card-body text-center d-flex flex-column justify-content-between">
+                                                                    <div>
+                                                                        <h5 class="card-title fw-bold">@p.ProductName</h5>
+                                                                    </div>
+                                                                    <div>
+                                                                        <p class="card-text text-dark fw-semibold">₱@p.ProductPrice</p>
+                                                                        <button type="button"
+                                                                                class="btn btn-warning w-100 order-btn"
+                                                                                data-id="@p.ProductId"
+                                                                                data-name="@p.ProductName"
+                                                                                data-price="@p.ProductPrice">
+                                                                            Add
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                </div>
+                                                }
                                             </div>
-                                        </div>
-                                    }
+                                        }
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -167,7 +189,7 @@
                 </div>
 
                 <!-- STEP 4 : PAYMENT -->
-                <div id="4" class="visually-hidden h-100 w-100">
+                <div id="step-4" class="visually-hidden h-100 w-100">
                     <div class="m-0 p-0 position-relative">
                         <h4 class="mb-3">Payment</h4>
 
@@ -176,7 +198,6 @@
                                 <label class="form-label">Payment Method</label>
                                 <select class="form-select" asp-for="Order.Payments.PaymentMethod">
                                     <option>Cash</option>
-                                    <option>Bank Transfer</option>
                                     <option>Paymaya</option>
                                     <option>Gcash</option>
                                 </select>
@@ -234,13 +255,13 @@
 				}
 			});
 
-			function showPage(pageNumber) {
-				$("#pages > div").addClass("visually-hidden");
-				$("#" + pageNumber).removeClass("visually-hidden");
-				$("#Step").text(pageNumber);
-				currentPage = pageNumber;
-				updateButtons();
-			}
+            function showPage(pageNumber) {
+                $("#pages > div").addClass("visually-hidden");
+                $("#step-" + pageNumber).removeClass("visually-hidden");
+                $("#Step").text(pageNumber);
+                currentPage = pageNumber;
+                updateButtons();
+            }
 
 			function updateButtons() {
 				$("#btnBack").prop("disabled", currentPage === 1);
@@ -306,7 +327,21 @@
             $("#totalAmount").text("₱" + total.toFixed(2));
             $("#PaymentAmount").val("₱" + total.toFixed(2));
         }
+        $(document).ready(function (){
+            $("#info a").on("click", function () {
+                var id = $(this).attr("id"); // 1,2,3,4
 
+                // set active tab
+                $("#info a").removeClass("active");
+                $(this).addClass("active");
+
+                // hide all content
+                $("#content > div").addClass("visually-hidden");
+
+                // show selected content
+                $("#content > div[id='" + id + "']").removeClass("visually-hidden");
+            });
+        })
 	</script>
 
 }

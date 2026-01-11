@@ -4,9 +4,10 @@
 
 <div class="container mt-5">
     <div class="card shadow border-0 rounded-4 p-4 bg-orange">
-        <h3 class="fw-bold mb-4 text-center text-white">Create New Staff Account</h3>
+        <h2 class="fw-bold mb-4 text-center text-white">Create New Staff Account</h2>
 
         <form id="createStaffForm">
+            <h3 class="text-white mb-1">Person</h3>
             <div class="mb-3">
                 <label class="form-label fw-semibold text-white">Full Name</label>
                 <input type="text" name="fullName" class="form-control rounded-3" placeholder="Enter full name" required />
@@ -17,6 +18,8 @@
                 <input type="email" name="email" class="form-control rounded-3" placeholder="Enter email (optional)" />
             </div>
 
+			<hr class="my-4 border-white text-white" />
+            <h3 class="text-white mb-1">Account</h3>
             <div class="mb-3">
                 <label class="form-label fw-semibold text-white">Username</label>
                 <input type="text" name="username" class="form-control rounded-3" placeholder="Choose a username" required />
@@ -28,7 +31,7 @@
             </div>
 
             <div class="text-end mt-4">
-                <button type="submit" class="btn px-4 fw-bold bg-white text-white">Create Staff</button>
+                <button type="submit" class="btn px-4 fw-bold bg-white text-orange">Create Staff</button>
             </div>
         </form>
     </div>
