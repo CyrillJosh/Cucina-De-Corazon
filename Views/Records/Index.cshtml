@@ -20,10 +20,13 @@
                     <tr class="text-white">
                         <th>Date</th>
                         <th>Ordered by</th>
-                        <th>Total</th>
                         <th>Address</th>
+                        <th>Total</th>
+                        <th>Balance</th>
+                        <th>Amount</th>
                         <th>Status</th>
                         <th>Actions</th>
+                        
                     </tr>
                 </thead>
                 <tbody>
@@ -39,6 +42,15 @@
                                     x.Quantity * Convert.ToInt32(Model.Products.First(y => y.ProductId == x.ProductId).ProductPrice)
                                     ).ToString("N2")
                                                         )
+                        </td>
+                        <td>
+                           
+                                    @(o.OrderProducts.Sum(x =>
+                                    x.Quantity * Convert.ToInt32(Model.Products.First(y => y.ProductId == x.ProductId).ProductPrice)
+                                    ) - o.Payments.PaymentAmount)
+                        </td>
+                        <td>
+                            @o.Payments.PaymentAmount
                         </td>
                         <td>@o.Payments.PaymentStatus</td>
                             <td>

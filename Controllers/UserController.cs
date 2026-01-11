@@ -65,7 +65,7 @@ namespace Cucina_De_Corazon.Controllers
             {
                 PersonId = person.PersonId,
                 Username = username,
-                Password = password, // 🔒 TODO: Hash password in production
+                Password = HashPassword(password), // 🔒 TODO: Hash password in production
                 Role = "Staff",
                 CreatedAt = DateTime.Now
             };
