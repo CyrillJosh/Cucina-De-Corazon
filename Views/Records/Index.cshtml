@@ -23,7 +23,7 @@
                         <th>Address</th>
                         <th>Total</th>
                         <th>Balance</th>
-                        <th>Amount</th>
+                        <th>Paid Amount</th>
                         <th>Reference Number</th>
                         <th>Status</th>
                         <th>Actions</th>
@@ -37,24 +37,24 @@
                             <td class="fw-semibold">@o.EventDetails.EventDate.ToString("yyyy-MM-dd")</td>
                             <td>@o.CustomerName</td>
                             <td>@o.CustomerAddress</td>
-                                <td>
-                                    ₱@(
-                                    o.OrderProducts.Sum(x =>
-                                    x.Quantity * Convert.ToInt32(Model.Products.First(y => y.ProductId == x.ProductId).ProductPrice)
-                                    ).ToString("N2")
-                                                        )
-                        </td>
-                        <td>
-                           
-                                    @(o.OrderProducts.Sum(x =>
-                                    x.Quantity * Convert.ToInt32(Model.Products.First(y => y.ProductId == x.ProductId).ProductPrice)
-                                    ) - o.Payments.PaymentAmount)
-                        </td>
-                        <td>
-                            @o.Payments.PaymentAmount
-                        </td>
-                        <td>@(o.Payments.PaymentMethod == "Cash" ? "Cash" : o.Payments.ReferenceNumber??"-")</td>
-                        <td>@o.Payments.PaymentStatus</td>
+                            <td>
+                                ₱@o.TotalAmount
+                            </td>
+                            <td>
+                                ₱@(o.TotalAmount - o.Payments.Sum(x => x.PaymentAmount))
+                            </td>
+                            <td>
+							    @o.Payments.Sum(x => x.PaymentAmount)
+                            </td>
+                            <td>
+                                @foreach(var payment in o.Payments)
+                                {
+                                    <div>
+                                        @(payment.PaymentMethod == "Cash"?"Cash":payment.ReferenceNumber??"-")
+                                    </div>
+							    }
+                            </td>
+                            <td>@o.Payments.FirstOrDefault().PaymentStatus</td>
                             <td>
                                 <a asp-action="Details" asp-route-id="@o.OrderId"
                                    class="btn btn-warning btn-sm text-white fw-bold">

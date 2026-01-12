@@ -34,13 +34,31 @@ namespace Cucina_De_Corazon.Controllers
                 return View("Index", ovm);
             }
 
-
-
             ovm.Order.OrderProducts = ovm.OrderItems.Select(i => new OrderProduct
             {
                 ProductId = i.ProductId,
                 Quantity = i.Quantity
             }).ToList();
+
+            ovm.Order.TotalAmount = ovm.OrderItems.Sum(i => i.Price * i.Quantity);
+
+            var payment = new Payment
+            {
+                PaymentAmount = ovm.Payment.PaymentAmount ?? 0,
+                PaymentDate = DateTime.Now,
+                PaymentMethod = ovm.Payment?.PaymentMethod ?? "Cash",
+                PaymentStatus = ovm.Payment?.PaymentStatus ?? "Pending",
+                ReferenceNumber = ovm.Payment?.ReferenceNumber
+            };
+
+            ovm.Order.Payments = new List<Payment> { payment };
+
+            var user = HttpContext.Session.GetInt32("User");
+            ovm.Order.CreatedBy = _context.Accounts.Find(user).Username;
+            ovm.Order.OrderStatus = "Pending";
+
+
+            ovm.Payment.PaymentStatus = ovm.Payment.PaymentAmount == ovm.Order.TotalAmount ? "Paid" : ovm.Payment.PaymentAmount.ToString()??"Partially Paid";
 
             _context.Orders.Add(ovm.Order);
             _context.SaveChanges();

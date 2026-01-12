@@ -1,4 +1,5 @@
 ﻿using Cucina_De_Corazon.Context;
+using Cucina_De_Corazon.Models;
 using Cucina_De_Corazon.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -27,6 +28,7 @@ namespace Cucina_De_Corazon.Controllers
                      .ToList(),
                 Products = _context.Products.ToList()
             };
+
             return View(records);
         }
 
@@ -44,5 +46,55 @@ namespace Cucina_De_Corazon.Controllers
             if (record.Order == null) return NotFound();
             return View(record);
         }
+
+        [HttpPost]
+        public IActionResult AddPayment(Payment payment)
+        {
+            if (!ModelState.IsValid)
+            {
+                TempData["Message"] = "Invalid please try again.";
+                return RedirectToAction("Details", new { id = payment.OrderId });
+            }
+
+            payment.PaymentDate = DateTime.Now;
+
+            // Save the new payment first
+            _context.Payments.Add(payment);
+            _context.SaveChanges();
+
+            var order = _context.Orders
+                .Include(o => o.Payments)
+                .FirstOrDefault(o => o.OrderId == payment.OrderId);
+
+            if (order == null)
+            {
+                TempData["Message"] = "Order not found.";
+                return RedirectToAction("Details", new { id = payment.OrderId });
+            }
+
+            // Calculate totals
+            decimal totalPaid = order.Payments.Sum(p => p.PaymentAmount ?? 0);
+            decimal orderTotal = order.TotalAmount ?? 0;
+
+            // Determine status
+            string status = totalPaid >= orderTotal ? "Paid" : "Pending";
+
+            // Update ALL payments for this order
+            foreach (var p in order.Payments)
+            {
+                p.PaymentStatus = status;
+            }
+
+            _context.SaveChanges();
+
+            TempData["Message"] = status == "Paid"
+                ? "Order fully paid."
+                : "Partial payment recorded.";
+
+            return RedirectToAction("Details", new { id = payment.OrderId });
+
+        }
+
+
     }
 }

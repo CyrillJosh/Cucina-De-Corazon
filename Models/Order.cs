@@ -31,7 +31,7 @@ public partial class Order
 
     public virtual EventDetail EventDetails { get; set; }
     [ValidateNever]
-    public virtual IEnumerable<OrderProduct> OrderProducts { get; set; } 
-
-    public virtual Payment Payments { get; set; } 
+    public virtual IEnumerable<OrderProduct> OrderProducts { get; set; }
+    [ValidateNever]
+    public virtual IEnumerable<Payment> Payments { get; set; } 
 }

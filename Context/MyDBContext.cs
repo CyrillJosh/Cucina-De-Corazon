@@ -129,7 +129,8 @@ public partial class MyDBContext : DbContext
             entity.Property(e => e.PaymentStatus).HasMaxLength(50);
             entity.Property(e => e.ReferenceNumber).HasMaxLength(100);
 
-            entity.HasOne(d => d.Order).WithOne(p => p.Payments)
+            entity.HasOne(d => d.Order).WithMany(p => p.Payments)
+                .HasForeignKey(d => d.OrderId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Payments_Orders");
         });

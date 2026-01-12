@@ -11,6 +11,7 @@ namespace Cucina_De_Corazon.ViewModels
         [ValidateNever]
         public List<Product> Products { get; set; }
         public List<OrderItem> OrderItems { get; set; } = new();
+        public Payment Payment { get; set; } = new();
     }
 
     public class OrderItem
