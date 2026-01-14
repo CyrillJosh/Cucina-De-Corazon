@@ -55,6 +55,8 @@ public partial class MyDBContext : DbContext
                 .HasDefaultValue("Customer");
             entity.Property(e => e.UpdatedAt).HasColumnType("datetime");
             entity.Property(e => e.Username).HasMaxLength(50);
+            entity.Property(e => e.IsAvailable)
+                .HasDefaultValue(true);
 
             entity.HasOne(d => d.Person).WithMany(p => p.Accounts)
                 .HasForeignKey(d => d.PersonId)

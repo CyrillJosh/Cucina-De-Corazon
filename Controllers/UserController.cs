@@ -22,6 +22,7 @@ namespace Cucina_De_Corazon.Controllers
         {
             var users = _context.Accounts
                 .Include(a => a.Person)
+                .Where(x => x.IsAvailable)
                 .ToList();
             return View(users);
         }
@@ -50,6 +51,9 @@ namespace Cucina_De_Corazon.Controllers
             if (_context.Accounts.Any(a => a.Username == username))
                 return Json(new { success = false, message = "Username already exists." });
 
+            if(_context.People.Any(x => x.Email == email))
+                return Json(new { success = false, message = "An account with that email already exists." });
+
             // Create new Person record
             var person = new Person
             {
@@ -65,7 +69,7 @@ namespace Cucina_De_Corazon.Controllers
             {
                 PersonId = person.PersonId,
                 Username = username,
-                Password = HashPassword(password), // 🔒 TODO: Hash password in production
+                Password = HashPassword(password), 
                 Role = "Staff",
                 CreatedAt = DateTime.Now
             };
@@ -73,6 +77,21 @@ namespace Cucina_De_Corazon.Controllers
             _context.SaveChanges();
 
             return Json(new { success = true, message = "Staff account created successfully!" });
+        }
+
+        [HttpPost]
+        public IActionResult Delete(int accountId)
+        {
+            var role = HttpContext.Session.GetString("Role");
+            if (role != "Admin")
+                return Json(new { success = false, message = "Unauthorized access." });
+            var account = _context.Accounts.Include(x => x.Person).FirstOrDefault(x => x.AccountId == accountId);
+            if (account == null || account.Role != "Staff")
+                return Json(new { success = false, message = "Staff account not found." });
+            account.IsAvailable = false;
+            _context.Accounts.Update(account);
+            _context.SaveChanges();
+            return Json(new { success = true, message = "Staff account deleted successfully!" });
         }
 
         [HttpGet]

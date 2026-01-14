@@ -18,6 +18,7 @@ public partial class Account
     public DateTime CreatedAt { get; set; }
 
     public DateTime? UpdatedAt { get; set; }
+    public bool IsAvailable { get; set; } = true;
 
     public virtual Person Person { get; set; } = null!;
 }
