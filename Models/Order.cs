@@ -29,6 +29,8 @@ public partial class Order
 
     public string? SpecialRequest { get; set; }
 
+    public int? NoPax { get; set; }
+
     public virtual EventDetail EventDetails { get; set; }
     [ValidateNever]
     public virtual IEnumerable<OrderProduct> OrderProducts { get; set; }

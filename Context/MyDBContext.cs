@@ -96,6 +96,7 @@ public partial class MyDBContext : DbContext
             entity.Property(e => e.CustomerAddress).HasMaxLength(255);
             entity.Property(e => e.CustomerName).HasMaxLength(100);
             entity.Property(e => e.Email).HasMaxLength(150);
+            entity.Property(e => e.NoPax);
             entity.Property(e => e.OrderDate)
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime");

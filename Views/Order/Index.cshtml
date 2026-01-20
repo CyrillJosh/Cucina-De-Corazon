@@ -59,11 +59,6 @@
                             <label class="form-label">Address</label>
                             <textarea class="form-control" asp-for="Order.CustomerAddress"></textarea>
                         </div>
-
-                        <div class="col-12">
-                            <label class="form-label">Special Request</label>
-                            <textarea class="form-control" asp-for="Order.SpecialRequest"></textarea>
-                        </div>
                     </div>
                 </div>
 
@@ -95,6 +90,11 @@
                         <div class="col-12">
                             <label class="form-label">Event Address</label>
                             <textarea class="form-control" asp-for="Order.EventDetails.EventAddress"></textarea>
+                        </div>
+
+                        <div class="col-12">
+                            <label class="form-label">Number of Pax</label>
+                            <input class="form-control" type="number" step="1" asp-for="Order.NoPax" />
                         </div>
                     </div>
                 </div>
@@ -143,10 +143,13 @@
                                                                     <div>
                                                                         <p class="card-text text-dark fw-semibold">₱@p.ProductPrice</p>
                                                                         <button type="button"
+                                                                                data-bs-toggle="modal"
+                                                                                data-bs-target="#AmountModal"
                                                                                 class="btn btn-warning w-100 order-btn"
                                                                                 data-id="@p.ProductId"
                                                                                 data-name="@p.ProductName"
-                                                                                data-price="@p.ProductPrice">
+                                                                                data-price="@p.ProductPrice"
+                                                                                data-imgsrc="@Url.Content($"~/images/{p.ProductName}.png")">
                                                                             Add
                                                                         </button>
                                                                     </div>
@@ -183,6 +186,10 @@
                                     </div>
                                     <button class="btn btn-success w-100 mt-2" type="button" id="ResetOrder">Reset Items</button>
                                 </div>
+                            </div>
+                            <div class="w-100">
+                                <label class="form-label">Special Request</label>
+                                <textarea class="form-control" asp-for="Order.SpecialRequest"></textarea>
                             </div>
                         </div>
                     </div>
@@ -222,7 +229,7 @@
                             </div>
                         </div>
                         <div class="position-absolute end-0 bottom-0">
-                            <button type="submit" class="btn btn-success w-100 mt-2">
+                            <button type="button" id="ModalButton" class="btn btn-success w-100 mt-2">
                                 Confirm Order
                             </button>
                         </div>
@@ -230,9 +237,42 @@
                 </div>
             </div>
         </form>
-
 	</div>
-
+</div>
+<div class="modal fade" id="AmountModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content rounded-4">
+            <div class="modal-header bg-orange text-white">
+                <h5 class="modal-title">Select Amount</h5>
+                <button type="button" class="btn-close btn-close-white"
+                        data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body row">
+                <div class="col-6">
+                    <img id="ModalImg" class="w-100" style="max-height:220px ;object-fit: cover;" />
+                </div>
+                <div class="col-6">
+                    <div class="row">
+                        <input hidden id="ModalId" />
+                        <h4 class="text-center" id="ModalName"></h4>
+                        <div class="col-12">
+                            <label class="form-label">Price</label>
+                            <input class="form-control bg-white" readonly id="ModalPrice"/>
+                        </div>
+                        <div>
+                            <label class="form-labe">Amount</label>
+                            <input class="form-control" type="number" step="1" id="ModalAmount"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-success" id="ModalSubmit" data-bs-dismiss="modal">
+                    Submit
+                </button>
+            </div>
+        </div>
+    </div>
 </div>
 @section Scripts {
 	<script>
@@ -283,17 +323,42 @@
             }
         });
 
-
         $(".order-btn").on("click", function () {
             const id = $(this).data("id");
             const name = $(this).data("name");
             const price = parseFloat($(this).data("price"));
+            const img = $(this).data("imgsrc");
+
+            var modalid = $("#ModalId");
+            var modalimg = $("#ModalImg");
+            var modalname = $("#ModalName");
+            var modalprice = $("#ModalPrice");
+            var modalamount = $("#ModalAmount");
+
+            modalamount.val(null);
+
+            modalid.val(id);
+            modalname.text(name);
+            modalprice.val(price);
+            modalimg.attr("src", img);
+
+            modalbutton = $("#ModalSubmit");
+            modalbutton.attr("data-id",id);
+            modalbutton.attr("data-name",name);
+            modalbutton.attr("data-price",price);
+        })
+
+        $("#ModalSubmit").on("click", function () {
+            const id = $(this).data("id");
+            const name = $(this).data("name");
+            const price = parseFloat($(this).data("price"));
+            const amount = $("#ModalAmount").val();
 
             if (orderItems[id]) {
-                orderItems[id].qty++;
+                orderItems[id].qty = parsefloat(orderItems + amount);
                 $("#qty-" + id).text(orderItems[id].qty);
             } else {
-                orderItems[id] = { qty: 1, price: price };
+                orderItems[id] = { qty: amount, price: price };
 
                 $("#emptyReceipt").remove();
 
@@ -301,7 +366,7 @@
                     <div class="d-flex justify-content-between align-items-center mb-1">
                         <span>${name}</span>
                         <span>
-                            <strong>x<span id="qty-${id}">1</span></strong>
+                            <strong>x<span id="qty-${id}">${amount}</span></strong>
                             ₱${price.toFixed(2)}
                         </span>
                     </div>
@@ -309,7 +374,7 @@
 
                 $("#orderItemsInputs").append(`
                     <input type="hidden" name="OrderItems[${index}].ProductId" value="${id}" />
-                    <input type="hidden" name="OrderItems[${index}].Quantity" id="input-qty-${id}" value="1" />
+                    <input type="hidden" name="OrderItems[${index}].Quantity" id="input-qty-${id}" value="${amount}" />
                     <input type="hidden" name="OrderItems[${index}].Price" value="${price}" />
                 `);
                 index++;
@@ -323,7 +388,7 @@
             let total = 0;
             for (const key in orderItems) {
                 total += orderItems[key].qty * orderItems[key].price;
-            }
+            }   
             $("#totalAmount").text("₱" + total.toFixed(2));
             $("#PaymentAmount").val("₱" + total.toFixed(2));
         }
