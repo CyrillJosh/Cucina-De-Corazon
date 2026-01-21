@@ -223,11 +223,11 @@
                                     </div>
                                     <div class="col-md-6 px-0">
                                         <label class="form-label">Balance</label>
-                                        <input type="number" readonly class="form-control bg-white text-black" id="PaymentBalance" />
+                                        <input type="text" readonly class="form-control bg-white text-black" id="PaymentBalance" />
                                     </div>
                                     <div class="col-md-6 pe-0">
                                         <label class="form-label text-white">eklog</label>
-                                        <button class="btn btn-warning w-100" type="button">
+                                        <button class="btn btn-warning w-100" type="button" id="50-button">
                                             50%
                                         </button>
                                     </div>
@@ -403,14 +403,26 @@
             updateTotal();
         });
 
+        $("#50-button").on("click", function () {
+            // Get total text (₱1234.00)
+            const totalText = $("#totalAmount").text();
+
+            // Remove peso sign and parse
+            const total = parseFloat(totalText.replace("₱", "")) || 0;
+
+            const half = total * 0.5;
+
+            $("#PaymentAmount").val(half.toFixed(2));
+        });
+
+
         function updateTotal() {
             let total = 0;
             for (const key in orderItems) {
                 total += orderItems[key].qty * orderItems[key].price;
             }
-            $("#PaymentBalance").text("₱" + total.toFixed(2));
             $("#totalAmount").text("₱" + total.toFixed(2));
-            $("#PaymentAmount").val("₱" + total.toFixed(2));
+            $("#PaymentBalance").val(total.toFixed(2));
         }
         $(document).ready(function (){
             $("#info a").on("click", function () {
