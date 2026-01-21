@@ -34,6 +34,7 @@ namespace Cucina_De_Corazon.Controllers
                 return View("Index", ovm);
             }
 
+
             ovm.Order.OrderProducts = ovm.OrderItems.Select(i => new OrderProduct
             {
                 ProductId = i.ProductId,
@@ -41,6 +42,11 @@ namespace Cucina_De_Corazon.Controllers
             }).ToList();
 
             ovm.Order.TotalAmount = ovm.OrderItems.Sum(i => i.Price * i.Quantity);
+            if((ovm.Order.TotalAmount/2) >= ovm.Payment.PaymentAmount)
+            {
+                ModelState.AddModelError("", "Downpayment must be 50% or more");
+                return View("Index", ovm);
+            }
 
             var payment = new Payment
             {
