@@ -24,9 +24,9 @@ namespace Cucina_De_Corazon.Controllers
                 Orders = _context.Orders
                         .Include(o => o.EventDetails)
                         .Include(o => o.Payments)
-                        .Include(o => o.OrderProducts)
-                     .ToList(),
-                Products = _context.Products.ToList()
+                        .Include(o => o.OrderProducts)  
+                        .ToList(),
+                Products = _context.Products.Include(x => x.Category).ToList()
             };
 
             return View(records);

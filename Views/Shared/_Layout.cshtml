@@ -18,12 +18,12 @@
     var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
     var currentAction = ViewContext.RouteData.Values["action"]?.ToString();
 
-    var categoriesJson = Context.Session.GetString("Categories");
-    List<Category> categories = null;
-    if (!string.IsNullOrEmpty(categoriesJson))
-    {
-        categories = JsonSerializer.Deserialize<List<Category>>(categoriesJson);
-    }
+    // var categoriesJson = Context.Session.GetString("Categories");
+    // List<Category> categories = null;    
+    // if (!string.IsNullOrEmpty(categoriesJson))
+    // {
+    //     categories = JsonSerializer.Deserialize<List<Category>>(categoriesJson);
+    // }
 }
 <body class="d-flex flex-column vh-100 vw-100 overflow-hidden" style="background: #ECE0D8">
     <header style="background: #212120; display: @(string.IsNullOrEmpty(sessionUser)? "none" : "block" ) ">

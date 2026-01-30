@@ -7,65 +7,73 @@
 <div class="container mt-5">
     <div class="card shadow border-0 rounded-4 p-4">
     <h2 class="text-center mb-4 fw-bold">Records</h2>
-
-    @if (!Model.Orders.Any())
+    @if (Model?.Orders == null || !Model.Orders.Any())
     {
         <div class="alert alert-info text-center rounded-3">No Records found.</div>
     }
     else
     {
-        <div class="table-responsive">
-            <table class="table table-striped">
-                <thead class="bg-orange text-white" style="position: sticky; top: 0; z-index: 1; border-collapse: separate; border-spacing: 0px ;border: 1px solid black; border-radius: 5px;">
-                    <tr class="text-white">
-                        <th>Date</th>
-                        <th>Ordered by</th>
-                        <th>Address</th>
-                        <th>Total</th>
-                        <th>Balance</th>
-                        <th>Paid Amount</th>
-                        <th>Reference Number</th>
-                        <th>Status</th>
-                        <th>Actions</th>
-                        
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var o in Model.Orders)
-                    {
-                        <tr>
-                            <td class="fw-semibold">@o.EventDetails.EventDate.ToString("yyyy-MM-dd")</td>
-                            <td>@o.CustomerName</td>
-                            <td>@o.CustomerAddress</td>
-                            <td>
-                                ₱@o.TotalAmount
-                            </td>
-                            <td>
-                                ₱@(o.TotalAmount - o.Payments.Sum(x => x.PaymentAmount))
-                            </td>
-                            <td>
-							    @o.Payments.Sum(x => x.PaymentAmount)
-                            </td>
-                            <td>
-                                @foreach(var payment in o.Payments)
+        <table class="table table-bordered border-2 border-black">
+            <thead>
+                <tr class="bg-orange  text-white fw-bold" style="border-color: black">
+                    <td>Event date</td>
+                    <td>Customer Name</td>
+                    <td>Event Address</td>
+                    <td>Total</td>
+                    <td>Balance</td>
+                    <td>Amount Paid</td>
+                    <td>Payment Method</td>
+                    <td>Status</td>
+                    <td></td>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var o in Model.Orders)
+                {
+                    var paidAmount = o.Payments?.Sum(x => x.PaymentAmount) ?? 0;
+                    var balance = o.TotalAmount - paidAmount;
+                    var status = o.Payments?.FirstOrDefault()?.PaymentStatus ?? "No Payment";
+
+                    <tr>
+                        <td class="fw-semibold">
+                            @(o.EventDetails?.EventDate.ToString("yyyy-MM-dd") ?? "-")
+                        </td>
+                        <td>@o.CustomerName</td>
+                        <td>@o.EventDetails?.EventAddress</td>
+                        <td>₱@o.TotalAmount</td>
+                        <td>₱@balance</td>
+                        <td>₱@paidAmount</td>
+
+                        <td>
+                            @if (o.Payments != null && o.Payments.Any())
+                            {
+                                foreach (var payment in o.Payments)
                                 {
                                     <div>
-                                        @(payment.PaymentMethod == "Cash"?"Cash":payment.ReferenceNumber??"-")
+                                        @(payment.PaymentMethod == "Cash"
+                                                                ? "Cash"
+                                                                : payment.ReferenceNumber ?? "-")
                                     </div>
-							    }
-                            </td>
-                            <td>@o.Payments.FirstOrDefault().PaymentStatus</td>
-                            <td>
-                                <a asp-action="Details" asp-route-id="@o.OrderId"
-                                   class="btn btn-warning btn-sm text-white fw-bold">
-                                    View Details
-                                </a>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
+                                }
+                            }
+                            else
+                            {
+                                <div>-</div>
+                            }
+                        </td>
+
+                        <td>@status</td>
+
+                        <td>
+                            <a asp-action="Details" asp-route-id="@o.OrderId"
+                               class="btn btn-warning btn-sm text-white fw-bold">
+                                View Details
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
     }
     </div>
 </div>

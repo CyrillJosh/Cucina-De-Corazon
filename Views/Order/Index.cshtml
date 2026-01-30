@@ -28,7 +28,7 @@
 			</div>
 		</div>
         @* Display PAGES *@
-        <form asp-action="AddOrder" asp-controller="Order" method="post" class="h-100 w-100">
+        <form id="orderForm" asp-action="AddOrder" asp-controller="Order" method="post" class="h-100 w-100">
             <div class="p-4 h-100 w-100" id="pages">
                 <!-- STEP 1 : ORDER / CUSTOMER -->
                 <div id="step-1" class=" h-100 w-100">
@@ -242,7 +242,7 @@
                                 </select>
                             </div>
                             <div class="col-12 d-flex justify-content-end">
-                                <button type="button" id="ModalButton" class="btn btn-success mt-2 col-3">
+                                <button type="submit" id="ModalButton" class="btn btn-success mt-2 col-3">
                                     Confirm Order
                                 </button>
                             </div>
@@ -439,6 +439,16 @@
                 $("#content > div[id='" + id + "']").removeClass("visually-hidden");
             });
         })
+        $("#orderForm").on("keydown", function (e) {
+            if (e.key === "Enter") {
+                // allow enter in textarea only
+                if ($(e.target).is("textarea")) return;
+
+                e.preventDefault();
+                return false;
+            }
+        });
+
 	</script>
 
 }

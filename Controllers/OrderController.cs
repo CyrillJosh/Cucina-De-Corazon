@@ -29,11 +29,17 @@ namespace Cucina_De_Corazon.Controllers
         {
             if (!ModelState.IsValid)
             {
-                ModelState.AddModelError("", "Please fill all required fields.");
-                ovm.Products = _context.Products.ToList();
+                TempData["Message"] = "Please fill all required fields.";
+                ovm.Products = _context.Products.Include(x => x.Category).ToList();
                 return View("Index", ovm);
             }
 
+            if (!ovm.OrderItems.Any())
+            {
+                TempData["Message"] = "Please select atleast 1 food item.";
+                ovm.Products = _context.Products.Include(x => x.Category).ToList();
+                return View("Index", ovm);
+            }
 
             ovm.Order.OrderProducts = ovm.OrderItems.Select(i => new OrderProduct
             {
@@ -41,10 +47,12 @@ namespace Cucina_De_Corazon.Controllers
                 Quantity = i.Quantity
             }).ToList();
 
+
             ovm.Order.TotalAmount = ovm.OrderItems.Sum(i => i.Price * i.Quantity);
-            if((ovm.Order.TotalAmount/2) >= ovm.Payment.PaymentAmount)
+            if((ovm.Order.TotalAmount/2) > ovm.Payment.PaymentAmount)
             {
-                ModelState.AddModelError("", "Downpayment must be 50% or more");
+                TempData["Message"] = "Downpayment must be 50% or more";
+                ovm.Products = _context.Products.Include(x => x.Category).ToList();
                 return View("Index", ovm);
             }
 
@@ -70,8 +78,22 @@ namespace Cucina_De_Corazon.Controllers
             _context.SaveChanges();
 
             TempData["Message"] = "Successfully Added";
-            return RedirectToAction("Index");
+            return RedirectToAction("Summary", new {id = ovm.Order.OrderId});
         }
 
+        public IActionResult Summary(int id)
+        {
+            if(id == 0) return RedirectToAction("Index");
+
+            var order = _context.Orders
+                .Include(o => o.EventDetails)
+                .Include(o => o.OrderProducts)
+                .Include(o => o.Payments)
+                .FirstOrDefault(o => o.OrderId == id);
+
+            if(order == null) return NotFound();
+
+            return View(order);
+        }
     }
 }
