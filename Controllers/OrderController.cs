@@ -93,6 +93,8 @@ namespace Cucina_De_Corazon.Controllers
 
             if(order == null) return NotFound();
 
+            ViewBag.Products = _context.Products.Where(x => order.OrderProducts.Select(y => y.ProductId).Contains(x.ProductId)).ToList();
+
             return View(order);
         }
     }

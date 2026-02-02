@@ -14,10 +14,11 @@
             <h3 class="text-center">Step 1 - Customer Info</h3>
             <div class="d-flex px-5">
                 <table class="table table-bordered flex-grow-1">
-                    <tr><td>Name:</td><td>@Model.CustomerName</td></tr>
+                    <tr><td class="col-6">Name:</td><td>@Model.CustomerName</td></tr>
                     <tr><td>Email:</td><td>@Model.Email</td></tr>
                     <tr><td>Contact Number:</td><td>@Model.ContactNumber</td></tr>
                     <tr><td>Alternate Contact Number:</td><td>@Model.AlternateContactNumber</td></tr>
+                    <tr><td>Customer Address:</td><td>@Model.CustomerAddress</td></tr>
                 </table>
             </div>
         </div>
@@ -27,6 +28,15 @@
         <!-- Step 2 -->
         <div>
             <h3 class="text-center">Step 2 - Event Info</h3>
+            <div class="d-flex px-5">
+                <table class="table table-bordered flex-grow-1">
+                    <tr><td class="col-6">Event Date:</td><td>@Model.EventDetails.EventDate</td></tr>
+                    <tr><td>Event Time:</td><td>@Model.EventDetails.EventTime</td></tr>
+                    <tr><td>Event Address:</td><td>@Model.EventDetails.EventAddress</td></tr>
+                    <tr><td>Event Type:</td><td>@Model.EventDetails.EventType</td></tr>
+                    <tr><td>Event Theme:</td><td>@Model.EventDetails.Theme</td></tr>
+                </table>
+            </div>
         </div>
 
         <hr />
@@ -34,6 +44,24 @@
         <!-- Step 3 -->
         <div>
             <h3 class="text-center">Step 3 - Food Items</h3>
+            <div class="d-flex px-5">
+                <table class="table table-bordered flex-grow-1">
+                    <tr><td class="col-3">Product Name</td><td>Quantity</td><td>Price</td><td>Subtotal</td></tr>
+                    @{
+                        var vp = ViewBag.Products;
+                        IEnumerable<Product> products = vp; 
+                    }
+                    @foreach(var prods in Model.OrderProducts){
+                        var sp = products.FirstOrDefault(x => x.ProductId == prods.ProductId).ProductPrice;
+                        var price = double.Parse(sp);
+                        var name = products.FirstOrDefault(x => x.ProductId == prods.ProductId).ProductName;
+                        var subtotal = price * prods.Quantity;
+
+                        <tr><td>@name</td><td>@prods.Quantity</td><td>@price.ToString("N2")</td><td>@subtotal.ToString("N2")</td></tr>
+                    }
+                    <tr><td colspan="3" class="text-end">Total:</td><td></td></tr>
+                </table>
+            </div>
         </div>
 
         <hr />
@@ -41,6 +69,15 @@
         <!-- Step 4 -->
         <div>
             <h3 class="text-center">Step 4 - Payment Info</h3>
+            <div class="d-flex px-5">
+                <table class="table table-bordered flex-grow-1">
+                    <tr><td class="col-6">Payment Status</td><td>@Model.Payments.First().PaymentStatus</td></tr>
+                    @foreach(var p in Model.Payments){
+                        <tr><td>Paid amount: </td><td>@p.PaymentAmount</td></tr>
+                    }
+                    <tr><td>Balance: </td><td>@(Model.TotalAmount - Model.Payments.Sum(x => x.PaymentAmount))</td></tr>
+                </table>
+            </div>
         </div>
 
     </div>

@@ -7,9 +7,19 @@
     <div class="card shadow-sm p-4 bg-orange" style="max-width:500px; width:100%;">
         <h3 class="text-center mb-4 fw-bold text-white">Product Details</h3>
 
-        <div class="mb-3 text-white">
-            <label class="fw-bold">Name:</label>
-            <p>@Model.ProductName</p>
+        <div class="mb-3 d-flex">
+            <img src="~/images/@(Model.ProductName).png" class="mx-auto" width="200" height="200"/>
+        </div>
+
+        <div class="mb-3 d-flex flex-row justify-content-between pe-5">
+            <div class="text-white">
+                <label class="fw-bold">Name:</label>
+                <p>@Model.ProductName</p>
+            </div>
+            <div class="text-white">
+                <label class="fw-bold">Category:</label>
+                <p>@Model.Category.CategoryName</p>
+            </div>
         </div>
 
         <div class="mb-3 text-white">
@@ -22,10 +32,6 @@
             <p>₱@Model.ProductPrice</p>
         </div>
 
-        <div class="mb-3 text-white">
-            <label class="fw-bold">Category:</label>
-            <p>@Model.Category?.CategoryName</p>
-        </div>
 
         @if (Model.ProductPicture !=null)
         {
