@@ -3,8 +3,11 @@
 	ViewData["Title"] = "Order Summary";
 }
 <div class="container mt-5 h-100 w-100 d-flex flex-column gap-0">
-    <div class="w-100 bg-orange rounded-top">
+    <div class="w-100 bg-orange rounded-top position-relative">
         <h3 class="fw-bold text-white text-center m-3">Order Summary</h3>
+        <div class="position-absolute end-0 top-0 h-100 d-flex align-items-center pe-2">
+            <button type="button" class="btn btn-light fw-bold">Confirm</button>
+        </div>
     </div>
     <div class="card shadow border-0 rounded-top-0 rounded-4 p-2"
          style="max-height:70vh; overflow-y:auto; overflow-x:hidden;">
@@ -50,6 +53,7 @@
                     @{
                         var vp = ViewBag.Products;
                         IEnumerable<Product> products = vp; 
+                        var total = 0;
                     }
                     @foreach(var prods in Model.OrderProducts){
                         var sp = products.FirstOrDefault(x => x.ProductId == prods.ProductId).ProductPrice;
@@ -57,9 +61,12 @@
                         var name = products.FirstOrDefault(x => x.ProductId == prods.ProductId).ProductName;
                         var subtotal = price * prods.Quantity;
 
+                        total += (int)subtotal;
+
                         <tr><td>@name</td><td>@prods.Quantity</td><td>@price.ToString("N2")</td><td>@subtotal.ToString("N2")</td></tr>
                     }
-                    <tr><td colspan="3" class="text-end">Total:</td><td></td></tr>
+
+                    <tr><td colspan="3" class="text-end">Total:</td><td>@total.ToString("N2")</td></tr>
                 </table>
             </div>
         </div>

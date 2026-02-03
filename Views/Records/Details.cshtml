@@ -78,69 +78,84 @@
         </button>
     </div>
 
-   @*  <div class="w-100 px-5">
-        <div class="row">
-            <table class="col-md-4">
+    <div class="w-100 mb-4">
+        <div class="w-100 d-flex gap-2">
+            <table class="table-bordered flex-grow-1">
                 <thead>
                     <tr>
-						<th class="fw-semibold me-3" colspan="2">Customer Details:</th>
+						<th class="fw-semibold me-3 ps-2" colspan="2">Customer Details:</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <td class="fw-semibold me-3">Customer Name:</td>
-						<td>@Model.Order.CustomerName</td>
+                        <td class="fw-semibold me-3 ps-2">Customer Name:</td>
+						<td class="ps-2">@Model.Order.CustomerName</tdcla>
                     </tr>
                     <tr>
-                        <td class="fw-semibold me-3">Event Address:</td>
-                        <td>@Model.Order.EventDetails.EventAddress.</td>
+                        <td class="fw-semibold me-3 ps-2">Customer Address:</td>
+                        <td class="ps-2">@Model.Order.CustomerAddress</td>
                     </tr>
                     <tr>
-                        <td class="fw-semibold me-3">Contact #:</td>
-                        <td>@Model.Order.ContactNumber</td>
+                        <td class="fw-semibold me-3 ps-2">Contact #:</td>
+                        <td class="ps-2">@Model.Order.ContactNumber</td>
                     </tr>
                     <tr>
-                        <td class="fw-semibold me-3">Alternate Contact #:</td>
-                        <td>@Model.Order.AlternateContactNumber</td>
+                        <td class="fw-semibold me-3 ps-2">Alternate Contact #:</td>
+                        <td class="ps-2">@Model.Order.AlternateContactNumber</td>
                     </tr>
                 </tbody>
             </table>
-            <table class="col-md-4">
+            <table class="table-bordered flex-grow-1">
                 <thead>
                     <tr>
-						<th class="fw-semibold me-3" colspan="2">Payment Details:</th>
+						<th class="fw-semibold me-3 ps-2" colspan="2">Event Details:</th>
+                    </tr>
+                </thead>
+                <tbody>
+                   <tr>
+                        <td class="fw-semibold me-3 ps-2">Event Date:</td>
+                        <td class="ps-2">@Model.Order.EventDetails.EventDate</td>
+                   </tr>
+                   <tr>
+                        <td class="fw-semibold me-3 ps-2">Event Time:</td>
+                        <td class="ps-2">@Model.Order.EventDetails.EventTime</td>
+                   </tr>
+                   <tr>
+                        <td class="fw-semibold me-3 ps-2">Event Type:</td>
+                        <td class="ps-2">@Model.Order.EventDetails.EventType</td>
+                   </tr>
+                   <tr>
+                        <td class="fw-semibold me-3 ps-2">Event Address:</td>
+                        <td class="ps-2">@Model.Order.EventDetails.EventAddress</td>
+                   </tr>
+                   <tr>
+                        <td class="fw-semibold me-3 ps-2">Event Theme:</td>
+                        <td class="ps-2">@Model.Order.EventDetails.Theme</td>
+                   </tr>
+                </tbody>
+            </table>
+            <table class="table-bordered flex-grow-1">
+                <thead>
+                    <tr>
+                        <th class="fw-semibold me-3 ps-2" colspan="2">Payment Details:</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <td class="fw-semibold me-3">Status:</td>
-                        <td>@Model.Order.Payments.FirstOrDefault().PaymentStatus</td>
+                        <td class="fw-semibold me-3 ps-2">Status:</td>
+                        <td class="ps-2">@Model.Order.Payments.LastOrDefault().PaymentStatus</td>
                     </tr>
                     <tr>
-                        <td class="fw-semibold me-3">Event Address:</td>
-                        <td>@foreach(var p in Model.Order.Payments){
-
-                            }
-                        </td>
+                        <td class="fw-semibold me-3 ps-2">Amount:</td>
+                        <td class="ps-2">@Model.Order.Payments.Sum(x => x.PaymentAmount)</td>
                     </tr>
-                    <tr>
-                        <td class="fw-semibold me-3">Contact #:</td>
-                        <td>@Model.Order.ContactNumber</td>
-                    </tr>
-                    <tr>
-                        <td class="fw-semibold me-3">Alternate Contact #:</td>
-                        <td>@Model.Order.AlternateContactNumber</td>
-                    </tr>
+                    <tr class="border-0"><td style="color: transparent" class="border-0" colspan="2">-</td></tr>
+                    <tr class="border-0"><td style="color: transparent" class="border-0" colspan="2">-</td></tr>
                 </tbody>
             </table>
-            <div class="col-md-6">
-
-            </div>
-            <div class="col-md-6">
-            </div>
         </div>
-    </div> *@
-    <div class="text-center">
+    </div>
+@*     <div class="text-center">
         <p class="mb-1 fw-semibold">Ordered by: @Model.Order.CustomerName</p>
         <p class="mb-0 text-muted">Email: @Model.Order.Email</p>
         <p class="mb-0 text-muted">Contact #: @Model.Order.ContactNumber</p>
@@ -157,7 +172,7 @@
         )
         ).ToString("N2")
                 )
-    </p> 
+    </p>  *@
 @*     @if (Model.Order.Payments.PaymentStatus == "Pending")
     {
         <div class="text-center my-4">
