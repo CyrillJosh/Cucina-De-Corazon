@@ -22,7 +22,6 @@
                     <td>Total</td>
                     <td>Balance</td>
                     <td>Amount Paid</td>
-                    <td>Payment Method</td>
                     <td>Status</td>
                     <td></td>
                 </tr>
@@ -43,25 +42,6 @@
                         <td>₱@o.TotalAmount</td>
                         <td>₱@balance</td>
                         <td>₱@paidAmount</td>
-
-                        <td>
-                            @if (o.Payments != null && o.Payments.Any())
-                            {
-                                foreach (var payment in o.Payments)
-                                {
-                                    <div>
-                                        @(payment.PaymentMethod == "Cash"
-                                                                ? "Cash"
-                                                                : payment.ReferenceNumber ?? "-")
-                                    </div>
-                                }
-                            }
-                            else
-                            {
-                                <div>-</div>
-                            }
-                        </td>
-
                         <td>@status</td>
 
                         <td>

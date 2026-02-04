@@ -77,7 +77,7 @@ namespace Cucina_De_Corazon.Controllers
             decimal orderTotal = order.TotalAmount ?? 0;
 
             // Determine status
-            string status = totalPaid >= orderTotal ? "Paid" : "Pending";
+            string status = totalPaid >= orderTotal ? "Fully Paid" : "Partially Paid";
 
             // Update ALL payments for this order
             foreach (var p in order.Payments)

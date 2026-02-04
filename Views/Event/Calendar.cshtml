@@ -4,107 +4,223 @@
 
 <style>
     body {
-        background-color: #ffffff;
-        color: #333333;
+        background-color: #f6f7fb;
+        color: #333;
+    }
+
+    /* Main Page Title */
+    .page-title {
+        font-weight: 800;
+        color: #EB6A00;
+        letter-spacing: 0.5px;
+    }
+
+    /* Calendar Card */
+    .calendar-card {
+        background: #fff;
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+        border: 1px solid rgba(0,0,0,0.05);
+    }
+
+    /* Header Bar */
+    .calendar-header {
+        background: linear-gradient(90deg, #EB6A00, #ff8a2b);
+        padding: 18px 20px;
+        color: #fff;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+        .calendar-header h4 {
+            margin: 0;
+            font-weight: 800;
+        }
+
+        .calendar-header small {
+            opacity: 0.85;
+        }
+
+    /* FullCalendar wrapper */
+    #calendar {
+        padding: 15px;
     }
 
     .fc {
         background-color: #ffffff;
         border-radius: 15px;
-        padding: 15px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
     }
 
+    /* Toolbar title */
     .fc-toolbar-title {
+        color: #EB6A00;
+        font-weight: 800;
+        font-size: 1.4rem;
+    }
+
+    /* Buttons */
+    .fc-button-primary {
+        background-color: #EB6A00 !important;
+        border: none !important;
+        color: #fff !important;
+        font-weight: 700;
+        border-radius: 12px !important;
+        padding: 8px 14px !important;
+        transition: all 0.2s ease-in-out;
+        box-shadow: 0 6px 14px rgba(235, 106, 0, 0.25);
+    }
+
+        .fc-button-primary:hover {
+            transform: translateY(-1px);
+            opacity: 0.95;
+        }
+
+        .fc-button-primary:focus {
+            box-shadow: 0 0 0 0.2rem rgba(235, 106, 0, 0.35) !important;
+        }
+
+    /* Header days row */
+    .fc-col-header-cell {
+        background: #EB6A00 !important;
+        border: none !important;
+    }
+
+    .fc-col-header-cell-cushion {
+        color: #fff !important;
+        font-weight: 700;
+        text-transform: uppercase;
+        font-size: 0.85rem;
+        letter-spacing: 0.5px;
+        padding: 10px 0;
+    }
+
+    /* Day number */
+    .fc-daygrid-day-number {
         color: #EB6A00;
         font-weight: 700;
     }
 
-    .fc-button-primary {
-        background-color: #EB6A00 !important;
-        border: none !important;
-        color: #000 !important;
-        font-weight: 600;
-        transition: all 0.2s ease-in-out;
-    }
-
-        /* .fc-button-primary:hover {
-            background-color: #e0ae32 !important;
-        } */
-
-    .fc-daygrid-day-number{
-            color:  #EB6A00
-    }
-    .fc-col-header-cell-cushion {
-        color: white;
-        font-weight: 500;
-    }
-/* 
-    .fc-daygrid-day:hover {
-        background-color: rgba(246, 194, 62, 0.15);
-        cursor: pointer;
-    } */
-
+    /* Today highlight */
     .fc-day-today {
-        background-color: #EB6A00 !important;
-        border: 1px solid #EB6A00 !important;
-    }
-    .fc-day-today .fc-daygrid-day-number {
-        color: #fff !important;
+        background: rgba(235, 106, 0, 0.15) !important;
+        border: 2px solid rgba(235, 106, 0, 0.45) !important;
     }
 
-    .fc-event {
-        background-color: #EB6A00 !important;
-        border: none !important;
-        color: #000 !important;
-        font-weight: 600;
-    }
+        .fc-day-today .fc-daygrid-day-number {
+            color: #EB6A00 !important;
+            font-weight: 900;
+        }
 
-    thead{
-        background: #EB6A00 !important;
-        margin-top: -20px;
-    }
-
-    .fc-event-title-container{
-            text-align: center;
-            color: white;
-    }
-        /* Make past days look faded */
+    /* Past days faded */
     .fc-daygrid-day.fc-day-past {
-        background-color: #e8e8e8 !important; /* slightly different background */
+        background-color: #f1f1f1 !important;
+        opacity: 0.75;
     }
 
-    .fc-daygrid-day.fc-day-other .fc-daygrid-day-number {
-        color: #999 !important; /* muted gray number */
-        font-weight: 500;
+    /* Other month days */
+    .fc-daygrid-day.fc-day-other {
+        background: #fafafa !important;
     }
+
+        .fc-daygrid-day.fc-day-other .fc-daygrid-day-number {
+            color: #aaa !important;
+            font-weight: 600;
+        }
+
+    /* Hover effect */
+    .fc-daygrid-day:hover {
+        background: rgba(235, 106, 0, 0.08);
+        cursor: pointer;
+        transition: 0.15s ease-in-out;
+    }
+
+    /* Events style */
+    .fc-event {
+        background: #EB6A00 !important;
+        border: none !important;
+        color: #fff !important;
+        font-weight: 700;
+        border-radius: 12px !important;
+        padding: 4px 6px !important;
+        box-shadow: 0 6px 14px rgba(0,0,0,0.12);
+        transition: 0.2s ease-in-out;
+    }
+
+        .fc-event:hover {
+            transform: scale(1.02);
+            opacity: 0.95;
+            cursor: pointer;
+        }
+
+    .fc-event-title-container {
+        text-align: center;
+        color: #fff;
+        font-size: 0.85rem;
+    }
+
+    /* Scroll inside calendar container */
+    .calendar-scroll {
+        max-height: 70vh;
+        overflow-y: auto;
+    }
+
+        .calendar-scroll::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .calendar-scroll::-webkit-scrollbar-thumb {
+            background: rgba(235, 106, 0, 0.6);
+            border-radius: 10px;
+        }
+
+        .calendar-scroll::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
 </style>
 
 <div class="container mt-5">
-    <h2 class="text-center fw-bold text-warning mb-4 text-orange">Event Calendar</h2>
-    <div id="calendar" style="max-height: 60vh; overflow-y: auto;"></div>
+    <div class="calendar-card">
+        <!-- Header -->
+        <div class="calendar-header w-100">
+            <div class="text-center w-100">
+                <h4>Event Calendar</h4>
+                <small>Click an event to view details</small>
+            </div>
+        </div>
+
+        <!-- Calendar -->
+        <div class="calendar-scroll">
+            <div id="calendar"></div>
+        </div>
+    </div>
 </div>
 
 @section Scripts {
     <script>
-               document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function () {
             const calendarEl = document.getElementById('calendar');
+
             const calendar = new FullCalendar.Calendar(calendarEl, {
                 initialView: 'dayGridMonth',
                 height: 'auto',
                 events: '/Event/GetEvents',
+
                 headerToolbar: {
                     left: 'prev,next today',
                     center: 'title',
                     right: ''
                 },
+
                 eventDisplay: 'block',
                 eventColor: '#EB6A00',
-                eventTextColor: '#000',
+                eventTextColor: '#fff',
+
                 eventClick: function (info) {
                     const orderId = info.event.id;
                     if (orderId) {
-                        window.location.href = `/Records/Details/${orderId}`; // or /Orders/Details/
+                        window.location.href = `/Records/Details/${orderId}`;
                     }
                 }
             });

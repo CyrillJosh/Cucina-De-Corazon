@@ -3,45 +3,96 @@
     ViewData["Title"] = "Product Details";
 }
 
-<div class="container mt-5 d-flex justify-content-center">
-    <div class="card shadow-sm p-4 bg-orange" style="max-width:500px; width:100%;">
-        <h3 class="text-center mb-4 fw-bold text-white">Product Details</h3>
+<div class="container mt-3 d-flex justify-content-center">
+    <div class="card shadow-lg border-0 rounded-4 overflow-hidden"
+         style="max-width:520px; width:100%; background:#f57c1f;">
 
-        <div class="mb-3 d-flex">
-            <img src="~/images/@(Model.ProductName).png" class="mx-auto" width="200" height="200"/>
+        <!-- Header -->
+        <div class="p-4 text-center">
+            <h3 class="fw-bold text-white mb-1">Product Details</h3>
         </div>
 
-        <div class="mb-3 d-flex flex-row justify-content-between pe-5">
-            <div class="text-white">
-                <label class="fw-bold">Name:</label>
-                <p>@Model.ProductName</p>
+        <!-- Body -->
+        <div class="bg-white p-4 rounded-top-4" style="margin-top:-10px;">
+
+            <!-- Product Image -->
+            <div class="d-flex justify-content-center mb-4">
+                <div class="p-2 rounded-4 shadow-sm bg-white"
+                     style="width: 180px; height: 180px; display:flex; align-items:center; justify-content:center;">
+                    <img src="~/images/@(Model.ProductName).png"
+                         class="img-fluid"
+                         style="max-height: 200px; object-fit: contain;"
+                         alt="Product Image" />
+                </div>
             </div>
-            <div class="text-white">
-                <label class="fw-bold">Category:</label>
-                <p>@Model.Category.CategoryName</p>
+
+            <!-- Name + Category -->
+            <div class="row g-3 mb-3">
+                <div class="col-6">
+                    <div class="p-3 rounded-4 shadow-sm">
+                        <small class="text-black-50 fw-semibold">Name</small>
+                        <div class="text-black fw-bold">@Model.ProductName</div>
+                    </div>
+                </div>
+
+                <div class="col-6">
+                    <div class="p-3 rounded-4 shadow-sm">
+                        <small class="text-black-50 fw-semibold">Category</small>
+                        <div class="text-black fw-bold">@Model.Category?.CategoryName</div>
+                    </div>
+                </div>
             </div>
-        </div>
 
-        <div class="mb-3 text-white">
-            <label class="fw-bold">Description:</label>
-            <p>@Model.ProductDescription</p>
-        </div>
-
-        <div class="mb-3 text-white">
-            <label class="fw-bold">Price:</label>
-            <p>₱@Model.ProductPrice</p>
-        </div>
-
-
-        @if (Model.ProductPicture !=null)
-        {
+            <!-- Description -->
             <div class="mb-3">
-                <img src="~/images/@Model.ProductPicture" class="img-fluid rounded shadow" />
+                <div class="p-3 rounded-4 shadow-sm">
+                    <small class="text-black-50 fw-semibold">Description</small>
+                    <p class="text-black mb-0 mt-1" style="line-height: 1.4;">
+                        @Model.ProductDescription
+                    </p>
+                </div>
             </div>
-        }
 
-        <div class="d-grid">
-            <a asp-action="Index" class="btn bg-white text-orange fw-bold" style="background: #f57c1f;">Back to List</a>
+            <!-- Price -->
+            <div class="mb-4">
+                <div class="p-3 rounded-4 shadow-sm d-flex justify-content-between align-items-center">
+                    <div>
+                        <small class="text-black-50 fw-semibold">Price</small>
+                        <div class="text-black fw-bold">₱@Model.ProductPrice</div>
+                    </div>
+
+                    <span class="badge rounded-pill px-3 py-2"
+                          style="background:#f57c1f; color:white; font-size:0.9rem;">
+						@(Model.IsAvailable ? "Available" : "Not Available")
+                    </span>
+                </div>
+            </div>
+
+            <!-- Optional Picture -->
+            @if (Model.ProductPicture != null)
+            {
+                <div class="mb-4">
+                    <div class="p-3 rounded-4 bg-black shadow-sm">
+                        <small class="text-white-50 fw-semibold">Uploaded Picture</small>
+                        <div class="mt-2">
+                            <img src="~/images/@Model.ProductPicture"
+                                 class="img-fluid rounded-4 shadow"
+                                 style="max-height: 250px; width:100%; object-fit: cover;"
+                                 alt="Uploaded Picture" />
+                        </div>
+                    </div>
+                </div>
+            }
+
+            <!-- Button -->
+            <div class="d-grid">
+                <a asp-action="Index"
+                   class="btn fw-bold rounded-4 py-2"
+                   style="background:#f57c1f; color:white;">
+                    ← Back to List
+                </a>
+            </div>
+
         </div>
     </div>
 </div>

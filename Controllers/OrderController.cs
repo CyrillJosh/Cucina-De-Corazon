@@ -72,7 +72,7 @@ namespace Cucina_De_Corazon.Controllers
             ovm.Order.OrderStatus = "Pending";
 
 
-            ovm.Payment.PaymentStatus = ovm.Payment.PaymentAmount == ovm.Order.TotalAmount ? "Paid" : ovm.Payment.PaymentAmount.ToString()??"Partially Paid";
+            ovm.Payment.PaymentStatus = ovm.Payment.PaymentAmount == ovm.Order.TotalAmount ? "Fully Paid" : ovm.Payment.PaymentAmount.ToString()??"Partially Paid";
 
             _context.Orders.Add(ovm.Order);
             _context.SaveChanges();

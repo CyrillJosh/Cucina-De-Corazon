@@ -6,7 +6,7 @@
     <div class="w-100 bg-orange rounded-top position-relative">
         <h3 class="fw-bold text-white text-center m-3">Order Summary</h3>
         <div class="position-absolute end-0 top-0 h-100 d-flex align-items-center pe-2">
-            <button type="button" class="btn btn-light fw-bold">Confirm</button>
+            <a asp-action="Index" asp-controller="Records" type="button" class="text-decoration-none btn btn-light fw-bold">Confirm</a>
         </div>
     </div>
     <div class="card shadow border-0 rounded-top-0 rounded-4 p-2"
@@ -80,7 +80,8 @@
                 <table class="table table-bordered flex-grow-1">
                     <tr><td class="col-6">Payment Status</td><td>@Model.Payments.First().PaymentStatus</td></tr>
                     @foreach(var p in Model.Payments){
-                        <tr><td>Paid amount: </td><td>@p.PaymentAmount</td></tr>
+                        <tr><td>
+                            amount: </td><td>@p.PaymentAmount</td></tr>
                     }
                     <tr><td>Balance: </td><td>@(Model.TotalAmount - Model.Payments.Sum(x => x.PaymentAmount))</td></tr>
                 </table>
