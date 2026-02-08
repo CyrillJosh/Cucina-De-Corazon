@@ -6,7 +6,7 @@
     <div class="w-100 bg-orange rounded-top position-relative">
         <h3 class="fw-bold text-white text-center m-3">Order Summary</h3>
         <div class="position-absolute end-0 top-0 h-100 d-flex align-items-center pe-2">
-            <a asp-action="Index" asp-controller="Records" type="button" class="text-decoration-none btn btn-light fw-bold">Confirm</a>
+            <a asp-action="Details" asp-controller="Records" asp-route-id="@Model.OrderId" type="button" class="text-decoration-none btn btn-light fw-bold">Confirm</a>
         </div>
     </div>
     <div class="card shadow border-0 rounded-top-0 rounded-4 p-2"
@@ -14,14 +14,14 @@
         
         <!-- Step 1 -->
         <div>
-            <h3 class="text-center">Step 1 - Customer Info</h3>
+            <h3 class="text-center">Customer Info</h3>
             <div class="d-flex px-5">
                 <table class="table table-bordered flex-grow-1">
-                    <tr><td class="col-6">Name:</td><td>@Model.CustomerName</td></tr>
-                    <tr><td>Email:</td><td>@Model.Email</td></tr>
-                    <tr><td>Contact Number:</td><td>@Model.ContactNumber</td></tr>
-                    <tr><td>Alternate Contact Number:</td><td>@Model.AlternateContactNumber</td></tr>
-                    <tr><td>Customer Address:</td><td>@Model.CustomerAddress</td></tr>
+                    <tr><td class="col-6 fw-bold">Name:</td><td>@Model.CustomerName</td></tr>
+                    <tr><td class="col-6 fw-bold">Email:</td><td>@Model.Email</td></tr>
+                    <tr><td class="col-6 fw-bold">Contact Number:</td><td>@Model.ContactNumber</td></tr>
+                    <tr><td class="col-6 fw-bold">Alternate Contact Number:</td><td>@Model.AlternateContactNumber</td></tr>
+                    <tr><td class="col-6 fw-bold">Customer Address:</td><td>@Model.CustomerAddress</td></tr>
                 </table>
             </div>
         </div>
@@ -30,14 +30,14 @@
 
         <!-- Step 2 -->
         <div>
-            <h3 class="text-center">Step 2 - Event Info</h3>
+            <h3 class="text-center">Event Info</h3>
             <div class="d-flex px-5">
                 <table class="table table-bordered flex-grow-1">
-                    <tr><td class="col-6">Event Date:</td><td>@Model.EventDetails.EventDate</td></tr>
-                    <tr><td>Event Time:</td><td>@Model.EventDetails.EventTime</td></tr>
-                    <tr><td>Event Address:</td><td>@Model.EventDetails.EventAddress</td></tr>
-                    <tr><td>Event Type:</td><td>@Model.EventDetails.EventType</td></tr>
-                    <tr><td>Event Theme:</td><td>@Model.EventDetails.Theme</td></tr>
+                    <tr><td class="col-6 fw-bold">Event Date:</td><td>@Model.EventDetails.EventDate</td></tr>
+                    <tr><td class="col-6 fw-bold">Event Time:</td><td>@Model.EventDetails.EventTime</td></tr>
+                    <tr><td class="col-6 fw-bold">Event Address:</td><td>@Model.EventDetails.EventAddress</td></tr>
+                    <tr><td class="col-6 fw-bold">Event Type:</td><td>@Model.EventDetails.EventType</td></tr>
+                    <tr><td class="col-6 fw-bold">Event Theme:</td><td>@Model.EventDetails.Theme</td></tr>
                 </table>
             </div>
         </div>
@@ -46,10 +46,10 @@
 
         <!-- Step 3 -->
         <div>
-            <h3 class="text-center">Step 3 - Food Items</h3>
+            <h3 class="text-center">Food Items</h3>
             <div class="d-flex px-5">
                 <table class="table table-bordered flex-grow-1">
-                    <tr><td class="col-3">Product Name</td><td>Quantity</td><td>Price</td><td>Subtotal</td></tr>
+                    <tr><td class="col-3 fw-bold">Product Name</td><td class="col-3 fw-bold">Quantity</td><td class="col-3 fw-bold">Price</td><td class="col-3 fw-bold">Subtotal</td></tr>
                     @{
                         var vp = ViewBag.Products;
                         IEnumerable<Product> products = vp; 
@@ -66,7 +66,7 @@
                         <tr><td>@name</td><td>@prods.Quantity</td><td>@price.ToString("N2")</td><td>@subtotal.ToString("N2")</td></tr>
                     }
 
-                    <tr><td colspan="3" class="text-end">Total:</td><td>@total.ToString("N2")</td></tr>
+                    <tr><td colspan="3" class="text-end fw-bold">Total:</td><td>@total.ToString("N2")</td></tr>
                 </table>
             </div>
         </div>
@@ -75,15 +75,33 @@
 
         <!-- Step 4 -->
         <div>
-            <h3 class="text-center">Step 4 - Payment Info</h3>
+            <h3 class="text-center">Payment Info</h3>
             <div class="d-flex px-5">
                 <table class="table table-bordered flex-grow-1">
-                    <tr><td class="col-6">Payment Status</td><td>@Model.Payments.First().PaymentStatus</td></tr>
-                    @foreach(var p in Model.Payments){
-                        <tr><td>
-                            amount: </td><td>@p.PaymentAmount</td></tr>
-                    }
-                    <tr><td>Balance: </td><td>@(Model.TotalAmount - Model.Payments.Sum(x => x.PaymentAmount))</td></tr>
+                    <tr><td class="col-6 fw-bold">Payment Status</td><td>@Model.Payments.First().PaymentStatus</td></tr>
+                    <tr><td colspan="2" class="text-center fw-bold">Payments Made</td></tr>
+                    @{
+						var totalPayments = Model.Payments.Sum(x => x.PaymentAmount);
+                        var balance = (Model.TotalAmount - totalPayments) < 0 ? 0 : Model.TotalAmount - totalPayments;
+						double change = balance > 0 ? 0.00 : (double)(Model.TotalAmount - totalPayments);
+					}
+                    <tr>
+                        <td colspan="2" class="p-0">
+                            <div class="h-100 w-100">
+                                <table class="table table-bordered m-0">
+                                    <tr><td class="col-6 fw-bold">Date Paid</td><td class="col-6 fw-bold">Amount</td></tr>
+                                    @foreach(var p in Model.Payments){
+                                        <tr><td>@(Convert.ToDateTime(p.PaymentDate).ToString("dd/mm/yyyy"))</td><td>@p.PaymentAmount</td></tr>
+                                    }
+                                    <tr><td class="col-6 fw-bold">Total Payments:</td><td>@totalPayments</td></tr>
+                                </table>
+                            </div>
+                        </td>
+                    </tr>
+                    
+                    <tr><td class="col-6 fw-bold">Amount: </td><td>@total.ToString("0.00")</td></tr>
+                    <tr><td class="col-6 fw-bold">Balance: </td><td>@balance</td></tr>
+                    <tr><td class="col-6 fw-bold">Change: </td><td>@change.ToString("0.00")</td></tr>
                 </table>
             </div>
         </div>

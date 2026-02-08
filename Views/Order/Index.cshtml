@@ -228,7 +228,11 @@
                                     <div class="col-md-12 px-0">
                                         <label class="form-label">Balance</label>
                                         <input type="text" readonly class="form-control bg-white text-black" id="PaymentBalance" />
-                                    </div>                                                                                                                              
+                                    </div>                                                                                         
+                                    <div class="col-md-12 px-0">
+										<label class="form-label">Change</label>
+										<input type="text" readonly class="form-control bg-white text-black" id="PaymentChange" value="₱0.00" />
+                                    </div>
                                 </div>
                             </div>
 
@@ -423,7 +427,8 @@
 
             let nbal = (total-amount < 0) ? 0 : total - amount; 
 
-            $("#PaymentBalance").val(nbal.toFixed(2));   
+            $("#PaymentBalance").val(nbal.toFixed(2));
+			$("#PaymentChange").val((amount - total < 0) ? "0.00" : (amount - total).toFixed(2));
         });
 
         $(document).ready(function (){

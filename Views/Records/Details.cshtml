@@ -71,12 +71,19 @@
 <div class="container mt-5 position-relative">
     <div class="w-100 position-relative">
         <h2 class="text-center mb-4 fw-bold text-orange">Bill Details</h2>
-        <button type="button"
-                class="bg-orange btn text-white position-absolute end-0 top-0 @(Model.Order.Payments.FirstOrDefault().PaymentStatus == "Fully Paid"? "hidden" : "")"
-                data-bs-toggle="modal"
-                data-bs-target="#paymentModal">
-            Update Payment
-        </button>
+        <div class="d-flex  position-absolute end-0 top-0 gap-2">
+            <a asp-action="Summary" asp-controller="Order" asp-route-id="@Model.Order.OrderId"
+                    class="bg-orange btn text-white">
+                View Reciept
+            </a>
+            <button type="button"
+                    class="bg-orange btn text-white @(Model.Order.Payments.FirstOrDefault().PaymentStatus == "Fully Paid"? "hidden" : "")"
+                    data-bs-toggle="modal"
+                    data-bs-target="#paymentModal">
+                Update Payment
+            </button>
+        </div>
+
     </div>
 
     <div class="w-100 mb-3">
