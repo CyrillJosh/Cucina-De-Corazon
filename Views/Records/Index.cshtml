@@ -40,7 +40,7 @@
                         <td>@o.CustomerName</td>
                         <td>@o.EventDetails?.EventAddress</td>
                         <td>₱@o.TotalAmount</td>
-                        <td>₱@balance</td>
+                        <td>₱@(balance < 0 ? 0 : balance )</td>
                         <td>₱@paidAmount</td>
                         <td>@status</td>
 

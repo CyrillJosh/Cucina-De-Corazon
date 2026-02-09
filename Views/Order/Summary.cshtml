@@ -91,7 +91,7 @@
                                 <table class="table table-bordered m-0">
                                     <tr><td class="col-6 fw-bold">Date Paid</td><td class="col-6 fw-bold">Amount</td></tr>
                                     @foreach(var p in Model.Payments){
-                                        <tr><td>@(Convert.ToDateTime(p.PaymentDate).ToString("dd/mm/yyyy"))</td><td>@p.PaymentAmount</td></tr>
+                                        <tr><td>@(Convert.ToDateTime(p.PaymentDate).ToString("dd/MM/yyyy"))</td><td>@p.PaymentAmount</td></tr>
                                     }
                                     <tr><td class="col-6 fw-bold">Total Payments:</td><td>@totalPayments</td></tr>
                                 </table>
