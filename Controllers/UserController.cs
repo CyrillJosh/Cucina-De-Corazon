@@ -1,4 +1,5 @@
-﻿using Cucina_De_Corazon.Context;
+﻿using Cucina_De_Corazon.Attributes;
+using Cucina_De_Corazon.Context;
 using Cucina_De_Corazon.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -18,6 +19,7 @@ namespace Cucina_De_Corazon.Controllers
         {
             _context = context;
         }
+        [Auth("Admin")]
         public IActionResult Index()
         {
             var users = _context.Accounts
@@ -27,6 +29,7 @@ namespace Cucina_De_Corazon.Controllers
             return View(users);
         }
 
+        [Auth("Admin")]
         [HttpGet]
         public IActionResult CreateStaff()
         {
@@ -38,6 +41,7 @@ namespace Cucina_De_Corazon.Controllers
             return View();
         }
 
+        [Auth("Admin")]
         [HttpPost]
         public IActionResult CreateStaff(string fullName, string email, string username, string password)
         {
@@ -79,6 +83,7 @@ namespace Cucina_De_Corazon.Controllers
             return Json(new { success = true, message = "Staff account created successfully!" });
         }
 
+        [Auth("Admin")]
         [HttpPost]
         public IActionResult Delete(int accountId)
         {
@@ -94,12 +99,14 @@ namespace Cucina_De_Corazon.Controllers
             return Json(new { success = true, message = "Staff account deleted successfully!" });
         }
 
+        [Auth("Admin")]
         [HttpGet]
         public IActionResult Register()
         {
             return View();
         }
 
+        [Auth("Admin")]
         [HttpPost]
         public IActionResult Register(string fullName, string email, string number, string username, string password)
         {

@@ -1,4 +1,5 @@
-﻿using Cucina_De_Corazon.Context;
+﻿using Cucina_De_Corazon.Attributes;
+using Cucina_De_Corazon.Context;
 using Cucina_De_Corazon.Models;
 using Cucina_De_Corazon.ViewModels;
 using Microsoft.AspNetCore.Mvc;
@@ -15,6 +16,7 @@ namespace Cucina_De_Corazon.Controllers
             _context = context;
         }
 
+        [Auth("Admin,Staff")]
         [HttpGet]
         public IActionResult Index(OrderViewModel ovm = null)
         {
@@ -24,6 +26,7 @@ namespace Cucina_De_Corazon.Controllers
             return View(ovm);
         }
 
+        [Auth("Admin,Staff")]
         [HttpPost]
         public IActionResult AddOrder(OrderViewModel ovm)
         {
@@ -81,6 +84,7 @@ namespace Cucina_De_Corazon.Controllers
             return RedirectToAction("Summary", new {id = ovm.Order.OrderId});
         }
 
+        [Auth("Admin,Staff")]
         public IActionResult Summary(int id)
         {
             if(id == 0) return RedirectToAction("Index");

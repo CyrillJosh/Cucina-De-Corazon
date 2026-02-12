@@ -1,4 +1,5 @@
-﻿using Cucina_De_Corazon.Context;
+﻿using Cucina_De_Corazon.Attributes;
+using Cucina_De_Corazon.Context;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,11 +15,13 @@ namespace Cucina_De_Corazon.Controllers
         }
 
         // Returns calendar page
+        [Auth("Admin,Staff")]
         public IActionResult Calendar()
         {
             return View();
         }
 
+        [Auth("Admin,Staff")]
         [HttpGet]
         public IActionResult GetEvents()
         {
@@ -35,6 +38,7 @@ namespace Cucina_De_Corazon.Controllers
             return Json(events);
         }
 
+        [Auth("Admin,Staff")]
         public IActionResult Details(int id)
         {
             var det = _context.Orders

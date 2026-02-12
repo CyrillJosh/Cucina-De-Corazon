@@ -1,4 +1,5 @@
-﻿using Cucina_De_Corazon.Context;
+﻿using Cucina_De_Corazon.Attributes;
+using Cucina_De_Corazon.Context;
 using Cucina_De_Corazon.Models;
 using Cucina_De_Corazon.ViewModels;
 using Microsoft.AspNetCore.Mvc;
@@ -16,6 +17,7 @@ namespace Cucina_De_Corazon.Controllers
             _emailService = emailService;
         }
 
+        [Auth("Admin,Staff")]
         public IActionResult Index()
         {
 
@@ -32,6 +34,7 @@ namespace Cucina_De_Corazon.Controllers
             return View(records);
         }
 
+        [Auth("Admin,Staff")]
         public IActionResult Details(int id)
         {
             var record = new OrderViewModel()
@@ -48,6 +51,7 @@ namespace Cucina_De_Corazon.Controllers
         }
 
         [HttpPost]
+        [Auth("Admin,Staff")]
         public IActionResult AddPayment(Payment payment)
         {
             if (!ModelState.IsValid)
@@ -63,7 +67,7 @@ namespace Cucina_De_Corazon.Controllers
             _context.SaveChanges();
 
             var order = _context.Orders
-                .Include(o => o.Payments)
+                .Include(o => o.Payments)   
                 .FirstOrDefault(o => o.OrderId == payment.OrderId);
 
             if (order == null)

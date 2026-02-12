@@ -1,4 +1,5 @@
-﻿using Cucina_De_Corazon.Context;
+﻿using Cucina_De_Corazon.Attributes;
+using Cucina_De_Corazon.Context;
 using Cucina_De_Corazon.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -15,16 +16,20 @@ namespace Cucina_De_Corazon.Controllers
             _context = context;
         }
 
+        [Auth("Admin,Staff")]
         public IActionResult Products(int category)
         {
             var prods = _context.Products.Include(x => x.Category).Where(x => x.CategoryId == category && x.IsAvailable).ToList();
             return View(prods);
         }
+
+        [Auth("Admin")]
         public IActionResult Index()
         {
             var products = _context.Products.Include(p => p.Category).Where(x => x.IsAvailable).OrderBy(x => x.CategoryId).ToList();
             return View(products);
         }
+        [Auth("Admin")]
 
         public IActionResult Details(int id)
         {
@@ -34,6 +39,7 @@ namespace Cucina_De_Corazon.Controllers
             return View(product);
         }
 
+        [Auth("Admin")]
         public IActionResult Create()
         {
             ViewBag.Categories = new SelectList(_context.Categories, "CategoryId", "CategoryName");
@@ -41,6 +47,7 @@ namespace Cucina_De_Corazon.Controllers
         }
 
         [HttpPost]
+        [Auth("Admin")]
         [ValidateAntiForgeryToken]
         public IActionResult Create([Bind("ProductName,ProductDescription,ProductPicture,CategoryId")] Product product)
         {
@@ -59,6 +66,7 @@ namespace Cucina_De_Corazon.Controllers
             ViewBag.Categories = new SelectList(_context.Categories, "CategoryId", "CategoryName", product.CategoryId);
             return View(product);
         }
+        [Auth("Admin")]
         public IActionResult Edit(int id)
         {
             var product = _context.Products.Find(id);
@@ -70,6 +78,7 @@ namespace Cucina_De_Corazon.Controllers
         }
 
         [HttpPost]
+        [Auth("Admin")]
         [ValidateAntiForgeryToken]
         public IActionResult Edit(int id, [Bind("ProductId,ProductName,ProductDescription,ProductPicture,CategoryId")] Product product, decimal MinPrice, decimal MaxPrice)
         {
@@ -93,6 +102,7 @@ namespace Cucina_De_Corazon.Controllers
         }
 
         [HttpPost]
+        [Auth("Admin")]
         public IActionResult Delete(int id)
         {
             var product = _context.Products.Find(id);
