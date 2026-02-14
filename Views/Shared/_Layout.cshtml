@@ -11,6 +11,13 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/flatpikr.css"/>
+    <style>
+        .text-underline-orange {
+            border-bottom-color: #f17c2c;
+            border-bottom-width: 3px;
+            border-bottom-style: solid;
+        }
+    </style>
 </head>
 @{
     var role = Context.Session.GetString("Role");
@@ -30,19 +37,22 @@
         <nav class="navbar navbar-expand-lg">
             <div class="container-fluid">
                 <div class="w-100 d-flex flex-row justify-content-between px-5 align-items-center" style="font-size: 1.25rem; font-weight: bold;">
+                    <div class="">
+						<img src="~/images/logo.png" class="me-2" style="height: 5rem; width: auto; transform: scale(1.5)" />
+                    </div> 
                     @if (role == "Admin")
                     {
-                        <a class=" text-decoration-none text-white" href="/Records">Records</a>
-                        <a class=" text-decoration-none text-white" href="/Menu">Menu</a>
-                        <a class=" text-decoration-none text-white" href="/Order">Add Order</a>
-                        <a class=" text-decoration-none text-white" href="/Event/Calendar">Schedules</a>
-                        <a class=" text-decoration-none text-white" href="/User">User Management</a>
+                        <a class=" text-decoration-none text-white @(currentController == "Records"?"text-underline-orange":"")" href="/Records">Records</a>
+                        <a class=" text-decoration-none text-white @(currentController == "Menu" ? "text-underline-orange" : "")" href="/Menu">Menu</a>
+                        <a class=" text-decoration-none text-white @(currentController == "Order" ? "text-underline-orange" : "")" href="/Order">Add Order</a>
+                        <a class=" text-decoration-none text-white @(currentController == "Event" ? "text-underline-orange" : "")" href="/Event/Calendar">Schedules</a>
+                        <a class=" text-decoration-none text-white @(currentController == "User" ? "text-underline-orange" : "")" href="/User">User Management</a>
                     }
                     else
                     {
-                        <a class=" text-decoration-none text-white" href="/Records">Records</a>
-                        <a class=" text-decoration-none text-white" href="/Order">Add Order</a>
-                        <a class=" text-decoration-none text-white" href="/Event/Calendar">Schedules</a>
+                        <a class=" text-decoration-none text-white @(currentController == "Records" ? "text-underline-orange" : "")" href="/Records">Records</a>
+                        <a class=" text-decoration-none text-white @(currentController == "Order" ? "text-underline-orange" : "")" href="/Order">Add Order</a>
+                        <a class=" text-decoration-none text-white @(currentController == "Event" ? "text-underline-orange" : "")" href="/Event/Calendar">Schedules</a>
                     }
                     @if (!string.IsNullOrEmpty(sessionUser))
                     {

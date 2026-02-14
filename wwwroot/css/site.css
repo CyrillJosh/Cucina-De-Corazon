@@ -41,7 +41,11 @@ body {
 
 
 .bg-orange {
-    background: #EB6A00 !important
+    background: #EB6A00 !important;
+}
+
+bg-orange-subtle {
+    background-color: #f17c2c !important;
 }
 
 .text-orange {
