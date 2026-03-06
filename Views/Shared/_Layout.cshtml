@@ -7,10 +7,13 @@
     <title>@ViewData["Title"] - Cucina_De_Corazon</title>
     <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.css" rel="stylesheet">
 
+    <link rel="manifest" href="~/manifest.json" />
 
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/lib/bootstrap-icons/font/bootstrap-icons.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/flatpikr.css"/>
+
     <style>
         .text-underline-orange {
             border-bottom-color: #f17c2c;
@@ -114,6 +117,14 @@
                 var modal = new bootstrap.Modal(document.getElementById('authModal'));
                 modal.show();
             });
+            self.addEventListener('fetch', (event) => {
+              // Basic listener to satisfy PWA requirements
+            });
+            if ('serviceWorker' in navigator) {
+              window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js');
+              });
+            }
         </script>
     }
 </body>

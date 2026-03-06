@@ -23,7 +23,7 @@
                     <td>Balance</td>
                     <td>Amount Paid</td>
                     <td>Status</td>
-                    <td></td>
+                    <td>Action</td>
                 </tr>
             </thead>
             <tbody>
@@ -46,8 +46,8 @@
 
                         <td>
                             <a asp-action="Details" asp-route-id="@o.OrderId"
-                               class="btn btn-warning btn-sm text-white fw-bold">
-                                View Details
+                               class="btn btn-info text-white btn-sm text-white fw-bold">
+                                    <i class="bi bi-card-list"></i>
                             </a>
                         </td>
                     </tr>

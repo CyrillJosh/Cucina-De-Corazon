@@ -1,0 +1,28 @@
+{
+  "theme_color": "#ffa238",
+  "background_color": "#ffffff",
+  "icons": [
+    {
+      "purpose": "maskable",
+      "sizes": "512x512",
+      "src": "icon512_maskable.png",
+      "type": "image/png"
+    },
+    {
+      "purpose": "any",
+      "sizes": "512x512",
+      "src": "icon512_rounded.png",
+      "type": "image/png"
+    }
+  ],
+  "orientation": "portrait",
+  "display": "standalone",
+  "dir": "auto",
+  "lang": "en-US",
+  "name": "Cucina De Corazon",
+  "short_name": "cdc",
+  "start_url": "https://localhost:7133/User/Login",
+  "scope": "/",
+  "description": "local app",
+  "id": "https://localhost:7133/User/Login"
+}
