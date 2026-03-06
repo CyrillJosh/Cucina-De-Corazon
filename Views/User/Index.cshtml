@@ -48,7 +48,7 @@
                                 <td>@user.CreatedAt.ToString("MMM dd, yyyy")</td>
                                 <td>
                                     <form method="post" asp-action="Delete" asp-controller="User" asp-route-accountId="@user.AccountId" class="d-inline delete-user-form">
-                                        <button type="submit" class="btn btn-sm btn-danger fw-bold rounded-2">
+                                        <button type="submit" class="btn btn-sm btn-outline-danger fw-bold rounded-2">
                                             <i class="bi bi-trash-fill"></i>
                                         </button>
                                     </form>
