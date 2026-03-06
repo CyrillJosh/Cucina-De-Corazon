@@ -23,7 +23,7 @@
                     <td>Balance</td>
                     <td>Amount Paid</td>
                     <td>Status</td>
-                    <td>Action</td>
+                    <td  class="text-center">Action</td>
                 </tr>
             </thead>
             <tbody>
@@ -45,10 +45,12 @@
                         <td>@status</td>
 
                         <td>
-                            <a asp-action="Details" asp-route-id="@o.OrderId"
-                                class="btn btn-outline-info btn-sm fw-bold">
-                                    <i class="bi bi-file-text-fill"></i>
-                            </a>
+                            <div class="d-flex justify-content-evenly">
+                                <a asp-action="Details" asp-route-id="@o.OrderId"
+                                    class="btn btn-outline-info btn-sm fw-bold">
+                                        <i class="bi bi-file-text-fill"></i>
+                                </a>
+                            </div>
                         </td>
                     </tr>
                 }

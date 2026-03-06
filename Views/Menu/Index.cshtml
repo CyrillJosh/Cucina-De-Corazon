@@ -18,7 +18,7 @@
                         <th>Description</th>
                         <th>Price</th>
                         <th>Category</th>
-                        <th>Actions</th>
+                        <th class="text-center">Actions</th>
                     </tr>
                 </thead>
                 <tbody class="bg-white">
@@ -30,9 +30,11 @@
                             <td>₱@p.ProductPrice</td>
                             <td>@p.Category?.CategoryName</td>
                             <td>
-                                <a asp-action="Edit" asp-route-id="@p.ProductId" class="btn btn-sm btn-outline-primary"><i class="bi bi-pencil-fill"></i></a>
-                                <a asp-action="Details" asp-route-id="@p.ProductId" class="btn btn-sm btn-outline-info"><i class="bi bi-file-text-fill"></i></a>
-                                <button class="btn btn-sm btn-outline-danger delete-btn" data-id="@p.ProductId"><i class="bi bi-trash-fill"></i></button>
+                                <div class="d-flex justify-content-evenly">
+                                    <a asp-action="Edit" asp-route-id="@p.ProductId" class="btn btn-sm btn-outline-primary"><i class="bi bi-pencil-fill"></i></a>
+                                    <a asp-action="Details" asp-route-id="@p.ProductId" class="btn btn-sm btn-outline-info"><i class="bi bi-file-text-fill"></i></a>
+                                    <button class="btn btn-sm btn-outline-danger delete-btn" data-id="@p.ProductId"><i class="bi bi-trash-fill"></i></button>
+                                </div>
                             </td>
                         </tr>
                     }
